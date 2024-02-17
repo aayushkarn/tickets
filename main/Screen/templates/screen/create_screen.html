@@ -1,0 +1,34 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for msg in messages %}
+            <li>{{msg}}</li>
+        
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<h1>Create Screen</h1>
+<form action={{url_for("screen.create_screen")}} method="POST">
+    Name <input type="name" name="name">
+    <button type="submit">Submit</button>
+</form>
+
+<br><br>
+<table style="margin:10px;">
+{% for screen in screens%}
+    <tr><td>{{screen.name}}<td>
+        <td>
+            <a href="{{url_for('screen.edit_screen', id=screen.id)}}" method="post">
+                Edit
+            </a>
+        <td>
+        <td>
+            <a href="{{url_for('screen.delete_screen', id=screen.id)}}">
+                Delete
+            </a>
+        </td>
+    </tr>
+{% endfor %}
+</table>

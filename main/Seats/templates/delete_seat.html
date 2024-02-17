@@ -1,0 +1,36 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for msg in messages %}
+            <li>{{msg}}</li>
+        
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<h1>Delete Seat</h1>
+<form action={{url_for("seats.delete_seats")}} method="POST">
+    Row <input type="number" name="row" value={{temp.row}}><br>
+    Column <input type="number" name="column" value={{temp.column}}><br>
+    Screen 
+    {%if screens %}
+        <select name="screen">
+            {% for id, name in screens %}
+                <option value="{{id}}"
+                {% if temp.screen %}
+                    {% if id== (temp.screen|int) %}selected{%endif%}
+                {%endif%}
+                >{{name}}</option>
+            {% endfor %}
+        </select>
+    {% else %}
+        <a href="{{url_for("screen.create_screen")}}">You haven't created any screen. Create One</a>
+    {% endif %}<br>
+    <button type="submit">Delete</button>
+    &nbsp;<a href="{{url_for("seats.edit_seats")}}">Edit</a>
+    &nbsp;<a href="{{url_for("seats.create_seat")}}">Back to Create Seat</a>
+</form>
+<br><br>
+<iframe src="{{url_for("seats.show_seats")}}" title="seatmap" style="width:100%;border:none;height:100%"></iframe>
+&nbsp;

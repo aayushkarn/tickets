@@ -1,0 +1,109 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for msg in messages %}
+            <li>{{msg}}</li>
+        
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<h1>Schedule Show</h1>
+<form action={{url_for("schedule.create_schedule")}} method="POST">
+    Movie
+    {% if movies %}
+        <select name="movie" id="movie">
+        {% for movie in movies %}
+            <option value="{{movie.id}}" 
+                {% if temp.movie %}
+                    {% if temp.movie|int == movie.id %}
+                        selected 
+                    {% endif %}
+                {% endif %}
+            >{{movie.title}}</option>
+        {% endfor %}
+        </select><br><br>
+    {% else %}
+        <br><br>
+        You haven't created any movies. <a href="{{url_for("movie.create_movie")}}">Create here</a><br><br>
+    {% endif %}
+
+    Screen
+    {% if screens %}
+        <select name="screen">
+        {% for screen in screens %}
+            <option value="{{screen.id}}"
+            {% if temp.screen %}
+                {% if temp.screen|int == screen.id %}
+                    selected 
+                {% endif %}
+            {% endif %}
+            >{{screen.name}}</option>
+        {% endfor %}
+        </select><br><br>
+    {% else %}
+        <br><br>
+        You haven't created any screens. <a href="{{url_for("screen.create_screen")}}">Create here</a><br><br>
+    {% endif %}
+
+    Start Time 
+    <input type="datetime-local" name="starttime" id="starttime" value="{{temp.starttime}}" min={{minTime}}><br><br>
+    <i>Endtime gets auto updated on start time change with addition of movie duration</i><br><br>
+    End Time 
+    <input type="datetime-local" name="endtime" id="endtime" value="{{temp.endtime}}"><br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<br><br>
+
+<a href="{{url_for("schedule.list_schedules")}}">List</a><br>
+
+
+<script>
+    async function fetcher(starttime, movieId){
+        try{
+            const response = await fetch("{{url_for('schedule.calculate_endtime')}}",{
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "starttime": starttime,
+                "movieId": movieId
+                })
+            }); 
+            if(!response.ok){
+                console.log("Seems Network problem");
+                return;
+            }
+
+            const result = await response.json();
+            return result
+        } catch(error) {
+            console.log("Problem fetching: ", error);
+        }
+    }
+    function getStarttime(){
+        starttime = document.getElementById("starttime")
+        endtime = document.getElementById("endtime")
+        movieId = document.getElementById("movie")
+        movieId.addEventListener("change", ()=>{
+            let res = fetcher(starttime.value, movieId.value)
+            res.then(function(result){
+                endtime.value = result['endtime']
+            })
+        })
+        starttime.addEventListener("change", ()=>{
+            let res = fetcher(starttime.value, movieId.value)
+            res.then(function(result){
+                endtime.value = result['endtime']
+            })
+        })
+    }
+
+    document.addEventListener("DOMContentLoaded", ()=>{
+        getStarttime();
+    })
+</script>
+

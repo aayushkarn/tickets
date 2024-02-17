@@ -1,0 +1,70 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for msg in messages %}
+            <li>{{msg}}</li>
+        
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<style>
+    table,th, td{
+        border:1px solid black;
+        border-collapse:collapse;
+        text-align:center;
+    }
+    th{
+        background-color: #ddd;
+    }
+    td{
+        padding:7px;
+    }
+    img{
+        width:100%%;
+        height:100px; 
+    }
+    .ONGOING{
+        background-color:rgba(0,255,0,0.3);
+    }
+    .UPCOMING{
+        background-color:#eee;
+    }
+    .EXPIRED{
+        background-color:rgba(255,0,0,0.3);
+    }
+</style>
+
+<h1>Schedule List</h1>
+<a href="{{url_for("schedule.create_schedule")}}">Add</a>&nbsp;<br><br>
+<i>Table is in ascending order of start_time</i><br>
+{% if schedulesList %}
+<table style="width:100%;"><br>
+    <tr>
+        <th>Movie</th>
+        <th>Screen</th>
+        <th>Start time</th>
+        <th>End Time</th>
+        <th colspan=2>Actions</th>
+    </tr>
+    {% for schedule in schedulesList %}
+        <tr class={{schedule.status.value}}>
+            <td><strong>{{schedule.movieref.title}}</strong></td>
+            <td>{{schedule.screenref.name}}</td>
+            <td>{{schedule.start_time}}</td>
+            <td>{{schedule.end_time}}</td>
+            <td><a href="{{url_for("schedule.update_schedule",id=schedule.id)}}">Edit</a></td>
+            <td><a href="{{url_for("schedule.delete_schedule",id=schedule.id)}}">Delete</a></td>
+        </tr>
+    {% endfor %}
+</table>
+{% else %}
+<br><br>
+No schdules yet. Goto "Add" to create schedule
+{% endif %}
+
+
+    
+<br>
+<br>

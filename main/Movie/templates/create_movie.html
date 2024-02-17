@@ -1,0 +1,43 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for msg in messages %}
+            <li>{{msg}}</li>
+        
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<h1>Create Movie</h1>
+<form action={{url_for("movie.create_movie")}} method="POST" enctype="multipart/form-data">
+    Poster <input type="file" name="poster"><br>
+    Title <input type="text" name="title" value={{temp.title}}><br>
+    Description <textarea name="description">{{temp.description}}</textarea><br>
+    Trailer Link <input type="text" name="trailer"><br>
+    Duration <input type="number" name="duration"><br>
+    Certificate
+
+    <select name="certificate">
+        {% for name, value in movieCertificate %}
+            <option value={{name}} 
+            {% if temp.certificate %}
+                {% if name==temp.certificate %}selected{%endif%}
+            {%else%}
+                {% if name=="UA" %}selected{%endif%}
+            {%endif%}
+            >
+                {{value}}
+            </option>
+        {% endfor %}
+    </select><br>
+    Release Date
+    <input type="date" name="release"><br>
+    <button type="submit">Submit</button>
+    <br>
+    <a href="{{url_for("movie.movie_list")}}">List</a>&nbsp;
+    
+
+</form>
+<br>
+<br>

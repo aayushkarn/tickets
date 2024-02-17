@@ -1,0 +1,119 @@
+<style>
+    table{
+        width:100%;
+        text-align:center;
+    }
+    td{
+        background: #999;
+        padding:16px;
+    }
+    .gap{
+        background: #ddd;
+    }
+</style>
+<h1>Seatmap</h1>
+Screens
+    {%if screens %}
+        <select name="screen" id="screen" onchange="currentScreenSeats()">
+            {%for id, name in screens%}
+                <option value={{id}}>{{name}}</option>
+            {%endfor%}
+        </select>
+        <div class="screenMap">
+            <div class="screen" align="center" width="100%;">Screen</div>
+            <div class="seatmap"></div>
+        </div>
+    {%else%}
+        <a href={{url_for("screen.create_screen")}}>You don't have Screens.Create One</a>
+    {%endif%}<br>
+<script>    
+    async function seatsGetter(screen){
+        try{
+            const response = await fetch("{{url_for('seats.get_seats')}}",{
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "screen": screen })
+            }); 
+            if(!response.ok){
+                console.log("Seems Network problem");
+                return;
+            }
+
+            const seats = await response.json();
+            return seats
+        } catch(error) {
+            console.log("Problem fetching seats: ", error);
+        }
+    }
+
+    function currentScreenSeats(){
+        const screen = document.getElementById('screen');
+        var selectedValue;
+        if (screen){
+            selectedValue = screen.value
+            console.log(selectedValue)
+            seats(selectedValue);
+        } else {
+            console.log("No screen")
+            return 0;
+        } 
+    }
+    
+    function seats(selectedValue){
+        let seats = seatsGetter(selectedValue)
+        seats.then(function(result){
+            var seatmap = document.getElementsByClassName("seatmap")[0];
+            if(seatmap){
+                if(seatmap.hasChildNodes()){
+                    console.log("Delete")
+                    seatmap.removeChild(seatmap.firstElementChild)
+                }
+            }
+            seatCreator(result)
+        });
+    }
+
+    function seatCreator(seats){
+        const highest_rows = seats[0]['highest_rows']
+        const highest_cols = seats[0]['highest_cols']
+        
+        var table = document.createElement('table');
+
+        for(let row=1;row<=highest_rows;row++){
+            var rowElement = document.createElement('tr');
+            for(let col=1;col<=highest_cols;col++){
+                var colElement = document.createElement('td');
+                
+                var seat = seats.find(s=> s.row === row && s.column === col);
+
+                colElement.innerHTML = seat.id+"<br>"+seat.row+", "+seat.column+"<br>"+seat.type;
+                colElement.classList.add("seat")
+                if(seat.type == "GAP"){
+                    colElement.classList.add("gap")
+                } else if(seat.type=="CLASSIC"){
+                    colElement.classList.add("classic")
+                } else if(seat.type=="BUSINESS"){
+                    colElement.classList.add("business")
+                } else if(seat.type=="EXECUTIVE"){
+                    colElement.classList.add("executive")
+                }
+                
+                rowElement.classList.add("row")
+                rowElement.appendChild(colElement);
+            }
+            table.classList.add("map")
+            table.appendChild(rowElement);
+        }
+        if(document.getElementsByClassName("seatmap")[0]){
+            document.getElementsByClassName("seatmap")[0].appendChild(table);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        currentScreenSeats()
+    });
+
+</script>

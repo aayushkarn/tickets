@@ -1,0 +1,9 @@
+*.sqlite3
+__pycache__/
+.env
+.static/
+*.jpeg
+*.jpg
+.venv/
+*.txt
+!requirements.txt
