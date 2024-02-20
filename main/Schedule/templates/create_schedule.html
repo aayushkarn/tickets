@@ -46,6 +46,23 @@
         <br><br>
         You haven't created any screens. <a href="{{url_for("screen.create_screen")}}">Create here</a><br><br>
     {% endif %}
+    
+    Price
+    {% if prices %}
+        <select name="price">
+            {% for uniqueid, name in prices %}
+                <option value="{{uniqueid}}"
+                    {% if temp.price %}
+                        {%if temp.price == uniqueid %}
+                            selected
+                        {% endif %}
+                    {% endif %}
+                >{{name}}</option>
+            {% endfor %}
+        </select><br><br>
+    {% else %}<br>
+        You haven't created any price so create it before movie forward <a href="{{url_for("schedule.create_price")}}">Create here</a><br><br>
+    {% endif %}
 
     Start Time 
     <input type="datetime-local" name="starttime" id="starttime" value="{{temp.starttime}}" min={{minTime}}><br><br>
@@ -88,12 +105,14 @@
         starttime = document.getElementById("starttime")
         endtime = document.getElementById("endtime")
         movieId = document.getElementById("movie")
-        movieId.addEventListener("change", ()=>{
-            let res = fetcher(starttime.value, movieId.value)
-            res.then(function(result){
-                endtime.value = result['endtime']
+        if(starttime.value!=''){
+            movieId.addEventListener("change", ()=>{
+                let res = fetcher(starttime.value, movieId.value)
+                res.then(function(result){
+                    endtime.value = result['endtime']
+                })
             })
-        })
+        }
         starttime.addEventListener("change", ()=>{
             let res = fetcher(starttime.value, movieId.value)
             res.then(function(result){

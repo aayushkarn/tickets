@@ -1,17 +1,19 @@
 from datetime import datetime
+from main import db
 from main.Authentication.utils import commitDB
 
-from main.Movie.utils import getMovieById, strDateTimeToPythonDateTime
+from main.Movie.utils import checkIfInputEmptyVAL, getMovieById, strDateTimeToPythonDateTime
 from main.Screen.utils import getScreenById
-from .models import Schedule, ScheduleStatus
+from main.Seats.models import SeatType
+from .models import Price, Schedule, ScheduleStatus
 
 def pythonDateTimeToHtml(_datetime):
     # 2024-02-21 18:23:00 to 2024-02-21T14:59
     formatted_obj = _datetime.strftime("%Y-%m-%dT%H:%M")
     return formatted_obj
 
-def checkIfScheduleAlreadyExists(movie, screen, starttime, endtime):
-    result =  Schedule.query.filter_by(movie=movie, screen=screen, start_time=starttime, end_time=endtime).first()
+def checkIfScheduleAlreadyExists(id, movie, screen, starttime, endtime):
+    result =  Schedule.query.filter(Schedule.id!=id,Schedule.movie==movie, Schedule.screen==screen, Schedule.start_time==starttime, Schedule.end_time==endtime).first()
     return True if result!=None else False
 
 def checkIfTimeIsOccupied(screen, starttime, endtime, scheduleid=None):
@@ -58,14 +60,12 @@ def getScheduleById(id):
     return schedule
 
 def hasChanged(val1, val2):
-    print(val1,val1)
     if val1 != val2:
         return True
     return False
 
 # find a better way to do this
 def manageScheduleStatus():
-    print("called")
     schedules = getAllSchedule()
     currentDateTime = datetime.now()
     for schedule in schedules:
@@ -84,3 +84,66 @@ def runEvery5minutes():
     # probably use celery
     manageScheduleStatus()
     commitDB()
+
+def getPriceList():
+    return Price.query.all()
+
+def getPriceListOnlyId():
+    unique = Price.query.group_by(Price.uniqueid).distinct().all()
+    return [(u.uniqueid, u.name) for u in unique]
+
+
+def getPriceListById(id):
+    return Price.query.filter_by(uniqueid=id).all()
+
+def getUniqueId(onlyid=None):
+    if onlyid:
+        unique = getPriceListById(onlyid)
+        if unique:
+            return [unique[0].uniqueid]
+        return []
+    else:
+        unique = Price.query.group_by(Price.uniqueid).distinct().all()
+    return [u.uniqueid for u in unique]
+
+# TODO: fix for single id request. Currently using list[0]
+def getPriceListWithSameId(onlyid=None):
+    if onlyid:
+        uniqueidArr = getUniqueId(onlyid)
+    else:
+        uniqueidArr = getUniqueId()
+    result = []
+    for uniqueid in uniqueidArr:
+        rows = Price.query.filter(Price.uniqueid==uniqueid).all()
+        data = {}
+        data['uniqueid'] = rows[0].uniqueid
+        data['status'] = rows[0].status.value
+
+        for row in rows:
+            if "name" not in data:
+                data['name'] = row.name
+            if row.seat_type == SeatType.CLASSIC:
+                data['CLASSIC'] = row.price
+            if row.seat_type == SeatType.BUSINESS:
+                data['BUSINESS'] = row.price
+            if row.seat_type == SeatType.EXCLUSIVE:
+                data['EXCLUSIVE'] = row.price
+        result.append(data)
+    return result
+
+def checkIfPositiveFloat(value):
+    try:
+        value = float(value)
+        if isinstance(value, float):
+            if value > 0.0 :
+                return True
+            else:
+                return False
+        else:
+            return False
+    except:
+        return False
+
+def checkIfUniqueNameExists(uniqueid):
+    return Price.query.filter(Price.uniqueid == uniqueid).all()
+

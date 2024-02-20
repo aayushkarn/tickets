@@ -71,3 +71,4 @@ def checkIfInputEmptyVAL(value):
     if isArrEmpty(value):
         return True
     return False
+

@@ -27,6 +27,6 @@ def create_app():
     app.register_blueprint(screen, url_prefix="/screen/")
     app.register_blueprint(seats, url_prefix="/seat/")
     app.register_blueprint(movie, url_prefix="/movie/")
-    app.register_blueprint(schedule, url_prefix="/")
+    app.register_blueprint(schedule, url_prefix="/schedule/")
 
     return app
