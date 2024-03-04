@@ -82,12 +82,12 @@ def  profile():
         return redirect(url_for('authentication.logout'))
     return  render_template("profile.html", user=user)
 
-@authentication.route("/logout")
+@authentication.route("/logout/")
 @login_required
-def  logout():
+def logout():
     session.pop('user', None)
     session.pop('_flashes', None)
-    return redirect(url_for('authentication.login'))
+    return redirect(url_for('home.index'))
 
 @authentication.route("/delete", methods=['GET','POST'])
 @login_required
@@ -187,6 +187,8 @@ def change_password():
                         if password != newPassword:
                             user.password = hashPassword(newPassword)
                             commitDB()
+                            flash("Password changed!")
+                            return redirect(url_for("authentication.profile"))
                         else:
                             flash("Old Password and New Password cannot be same!")
     return  render_template("change_password.html", user=user)

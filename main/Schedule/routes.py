@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from flask import Blueprint, jsonify, render_template, request, url_for, redirect,flash
 from main.Authentication.utils import commitDB, deleteFromDB, saveToDB, login_required, login_not_required, superuser_required
+from main.Movie.models import Movie
 from main.Seats.models import SeatType
 
 from main.config import Config
@@ -31,6 +32,10 @@ def create_schedule():
     movies = getMovieList()
     screens = getAllScreen()
     prices = getPriceListOnlyId()
+    newPrices=[]
+    for key, value, status in prices:
+        if status == PriceStatus.ENABLED:
+            newPrices.append({key, value})
     minTime = pythonDateTimeToHtml(datetime.now())
     temp = {}
     if request.method == "POST":
@@ -59,10 +64,13 @@ def create_schedule():
                                     flash(f"Time Slot is already occupied in screen {screen}")
                                 else:
                                     temp['endtime'] = endtime
-                                    newSchedule = Schedule(movie,screen,price,_starttime,_endtime)
-                                    saveToDB(newSchedule)
-                                    flash("Saved")
-                                    return redirect(url_for("schedule.list_schedules"))
+                                    if isScheduleBeforeRelease(movie, starttime):
+                                        flash(f"Schedule date of movie is before the release date")
+                                    else:
+                                        newSchedule = Schedule(movie,screen,price,_starttime,_endtime)
+                                        saveToDB(newSchedule)
+                                        flash("Saved")
+                                        return redirect(url_for("schedule.list_schedules"))
                         else:
                             emptyBoilerPlate("End Time")
                     else:
@@ -74,7 +82,7 @@ def create_schedule():
         else:
             emptyBoilerPlate("Movie")
 
-    return render_template("create_schedule.html", movies=movies, screens=screens, temp=temp, minTime=minTime, prices=prices)
+    return render_template("create_schedule.html", movies=movies, screens=screens, temp=temp, minTime=minTime, prices=newPrices)
 
 @schedule.route("/calculate-endtime/", methods=['POST'])
 @login_required
@@ -97,6 +105,10 @@ def update_schedule(id):
     movies = getMovieList()
     screens = getAllScreen()
     prices = getPriceListOnlyId()
+    newPrices=[]
+    for key, value, status in prices:
+        if status == PriceStatus.ENABLED:
+            newPrices.append({key, value})
     # minTime = pythonDateTimeToHtml(datetime.now())
     starttime = pythonDateTimeToHtml(schedule.start_time)
     endtime = pythonDateTimeToHtml(schedule.end_time)
@@ -155,7 +167,7 @@ def update_schedule(id):
         else:
             emptyBoilerPlate("Movie")
 
-    return render_template("edit_schedule.html", movies=movies, screens=screens, starttime=starttime, endtime=endtime,temp={}, schedule=schedule, prices=prices)
+    return render_template("edit_schedule.html", movies=movies, screens=screens, starttime=starttime, endtime=endtime,temp={}, schedule=schedule, prices=newPrices)
 
 @schedule.route("/delete/<int:id>", methods=['GET', 'POST'])
 @login_required

@@ -33,6 +33,20 @@
     </select><br>
     Release Date
     <input type="date" name="release"><br>
+    Status
+    <select name="status">
+        {% for name, value in movieStatus %}
+            <option value={{name}}
+            {% if temp.status %}
+                {% if name==temp.status %}selected{%endif%}
+            {% else %}
+                {% if name=="ACTIVE" %}selected{%endif%}
+            {%endif%}
+            >
+            {{value}}
+        </option>
+        {% endfor %}
+    </select><br>
     <button type="submit">Submit</button>
     <br>
     <a href="{{url_for("movie.movie_list")}}">List</a>&nbsp;

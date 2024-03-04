@@ -8,9 +8,11 @@
         </ul>
     {% endif %}
 {% endwith %}
-<form action={{url_for('authentication.login')}} method="post">
-    Email:&nbsp<input type="email" name="email" value={{values.email}}><br>
-    Password:&nbsp<input type="Password" name="password"><br>
+<h1>Login User</h1>
+<form action="{{url_for('authentication.login')}}" method="POST">
+    Email <input type="email" name="email"><br>
+    Password <input type="password" name="password"><br>
     <button type="submit">Login</button>
 </form>
-<a href={{url_for('authentication.create_user')}}>Register</a>
+
+<a href="{{url_for('authentication.create_user')}}">Register here</a><br>

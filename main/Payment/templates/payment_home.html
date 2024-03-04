@@ -1,0 +1,83 @@
+{% extends "base.html" %} 
+
+{% block styles %}
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+.payment-details {
+    width: 70%; /* Adjust the width as needed */
+    background-color:rgba(0,0,0,0.2);
+    padding:20px;
+}
+.payment-button-container {
+    width: 30%; /* Adjust the width as needed */
+    text-align: right; /* Align the button to the right */
+    background-color:rgba(0,0,0,0.4);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+#khalti-payment-button{
+    background-color: #5C2D91;
+    font-size:20px;
+    cursor: pointer;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 2px;
+}
+#khalti-payment-button:hover{
+    background-color:#6d2db5;
+}
+.movieContainer{
+    display: flex;
+    flex-wrap: wrap;
+}
+.movieContainer > div {
+    flex: 1 1 calc(33.33% - 10px);
+    margin: 5px;
+}
+.movie{
+    border:1px solid white;
+    text-align:center;
+}
+{% endblock %}
+{%block head%}
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+{%endblock%}
+{% block content%}
+<div class="container">
+    <div class="payment-details">
+        <h2>Payment Details</h2>
+        <p>Name: {{name}}</p>
+        <p>Email: {{email}}</p>
+        <b>Tickets: </b><br>
+        <div class="movieContainer">
+        {% for m in movieInfo%}
+            <div class="movie">
+                <span>Movie: {{m['title']}}</span><br>
+                <span>Duration: {{m['duration']}} min</span><br>
+                <span>Date: {{m['date']}}</span><br>
+                <span>Time: {{m['time']}}</span><br>
+                <span>Seat Id: {{m['seat_id']}}</span><br>
+                <span>Screen: {{m['screen']}}</span><br>
+                <div style="border: 1px solid white;display:inline-block;margin:5px 0;">
+                    <b>Seat Location</b><br>
+                    <span>Seat Row: {{m['seat_row']}}</span><br>
+                    <span>Seat Column: {{m['seat_column']}}</span><br>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <p>Total Price: Rs. {{totalPrice}}</p>
+    </div>
+    <div class="payment-button-container">
+        <form action="{{url_for("payment.initiate_payment")}}" method="post">
+            <button type="submit" id="khalti-payment-button">Pay with Khalti</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

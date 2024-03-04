@@ -11,6 +11,7 @@
 
 <h1>Schedule Show</h1>
 <form action={{url_for("schedule.create_schedule")}} method="POST">
+
     Movie
     {% if movies %}
         <select name="movie" id="movie">
@@ -50,7 +51,7 @@
     Price
     {% if prices %}
         <select name="price">
-            {% for uniqueid, name in prices %}
+            {% for name, uniqueid in prices %}
                 <option value="{{uniqueid}}"
                     {% if temp.price %}
                         {%if temp.price == uniqueid %}

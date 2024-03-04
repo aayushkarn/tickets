@@ -47,6 +47,10 @@ def checkIfPositiveInt(value):
     except:
         return False
 
+def getSeatById(id):
+    seat = Seats.query.filter_by(id=id).first()
+    return seat
+
 def checkIfSeatExists(row, column, screen):
     seat = Seats.query.filter_by(row=row, column=column, screen=screen).first()
     # print(seat)

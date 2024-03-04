@@ -3,7 +3,7 @@ from main.Authentication.utils import commitDB, deleteFromDB, saveToDB, login_re
 
 from main.Screen.utils import isNone
 
-from .models import Movie, MovieCertificate
+from .models import Movie, MovieCertificate, MovieStatus
 from ..Seats.utils import checkIfInputEmpty, easyCheckIfInputEmpty
 from .utils import *
 
@@ -14,6 +14,7 @@ movie = Blueprint("movie", __name__, template_folder="templates")
 @superuser_required
 def create_movie():
     movieCertificate = [(cert.name, cert.value) for cert in MovieCertificate]
+    movieStatus = [(stat.name, stat.value) for stat in MovieStatus]
     temp = {}
     if request.method == "POST":
         poster = request.files["poster"]
@@ -23,13 +24,15 @@ def create_movie():
         duration = request.form.get("duration")
         certificate = request.form.get("certificate")
         release = request.form.get("release")
+        status = request.form.get("status")
 
-        if not easyCheckIfInputEmpty(poster=poster, title=title, trailer=trailer, duration=duration, certificate=certificate, release=release):
+        if not easyCheckIfInputEmpty(poster=poster, title=title, trailer=trailer, duration=duration, certificate=certificate, release=release, status=status):
             temp['title'] = title
             temp['description'] = description
             temp['duration'] = duration
             temp['certificate'] = certificate
             temp['release'] = release
+            temp['status'] = status
 
             extension = getImageExt(poster)
             if(extension in getAllowedImgExt()):
@@ -38,7 +41,7 @@ def create_movie():
                     flash("Error getting file")
                 else:
                     newRelease = strDateToPythonDate(release)
-                    newMovie = Movie(posterURL, title, description, trailer, duration, certificate, newRelease)
+                    newMovie = Movie(posterURL, title, description, trailer, duration, certificate, status, newRelease)
                     
                     saveToDB(newMovie)
                     flash("Saved")
@@ -46,7 +49,7 @@ def create_movie():
             else:
                 flash(f"{extension} not allowed. Only {getAllowedImgExt()} allowed!")
 
-    return render_template("create_movie.html",temp=temp,movieCertificate=movieCertificate)
+    return render_template("create_movie.html",temp=temp,movieCertificate=movieCertificate, movieStatus=movieStatus)
 
 @movie.route("/list/")
 @login_required
@@ -82,10 +85,10 @@ def delete_movie(id):
 def edit_movie(id):
     movie =  getMovieById(id)
     movieCertificate = [(cert.name, cert.value) for cert in MovieCertificate]
+    movieStatus = [(stat.name, stat.value) for stat in MovieStatus]
 
     if not isNone(movie):
         movieID = movie.id
-        movie.poster_url = getImagePath(movie.poster_url)
         if request.method == "POST":
             poster = request.files["poster"]
             title = request.form.get("title")
@@ -94,6 +97,7 @@ def edit_movie(id):
             duration = request.form.get("duration")
             certificate = request.form.get("certificate")
             release = request.form.get("release")
+            status = request.form.get("status")
             temp = movie
             print(temp.poster_url)
             # not using easyCheckIfInputEmpty because of BUG
@@ -113,20 +117,29 @@ def edit_movie(id):
                         if checkIfInputEmptyVAL(certificate):
                             emptyBoilerPlate("certificate")
                         else:
-                            temp.release_date =strDateToPythonDate(release)
+                            temp.certificate = certificate
                             if checkIfInputEmptyVAL(release):
                                 emptyBoilerPlate("release")
                             else:
-                                oldPosterUrl = None
-                                # update value
-                                if not poster.filename == "":
-                                    extension = getImageExt(poster)
-                                    if(extension in getAllowedImgExt()):
-                                        posterURL = upload_img(poster)
-                                        oldPosterUrl = temp.poster_url
-                                        temp.poster_url = posterURL
+                                temp.release_date =strDateToPythonDate(release)
+                                if checkIfInputEmptyVAL(status):
+                                    emptyBoilerPlate("status")
+                                else:
+                                    temp.status = status
+                                    oldPosterUrl = None
+                                    # update value
+                                    if poster.filename == movie.poster_url:
+                                        # no change
+                                        pass
                                     else:
-                                        flash(f"{extension} not allowed. Must be {getAllowedImgExt()} only!")
+                                        if not poster.filename == "":
+                                            extension = getImageExt(poster)
+                                            if(extension in getAllowedImgExt()):
+                                                posterURL = upload_img(poster)
+                                                oldPosterUrl = temp.poster_url
+                                                temp.poster_url = posterURL
+                                            else:
+                                                flash(f"{extension} not allowed. Must be {getAllowedImgExt()} only!")
             if temp != None:
                 commitDB()
                 if not isNone(oldPosterUrl):
@@ -137,4 +150,5 @@ def edit_movie(id):
     else:
         flash("No such movie exists")
         return redirect(url_for("movie.create_movie"))
-    return render_template("edit_movie.html", movie=movie, movieCertificate=movieCertificate)
+    movie.poster_url = getImagePath(movie.poster_url)
+    return render_template("edit_movie.html", movie=movie, movieCertificate=movieCertificate, movieStatus=movieStatus)

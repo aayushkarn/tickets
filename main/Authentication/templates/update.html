@@ -11,6 +11,7 @@
 <h1>Update Profile</h1>
 <p><i>Leave it as it is if you dont want to change</i></p>
 <form action="{{url_for('authentication.update')}}" method="POST">
+
     Name <input type="name" name="name" value="{{user.name}}"><br>
     Username <input type="text" name="username" value="{{user.username}}"><br>
     Email <input type="email" name="email" value="{{user.email}}"><br>

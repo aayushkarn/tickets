@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}{% endblock %}ticket</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="{{url_for('static', filename='favicon.ico')}}">
+  <style>
+    body{
+      margin:0 16px;
+      padding:0;
+      background-color:#343434;
+      color:white;
+    }
+    @font-face{
+      font-family: main;
+      src: url("{{url_for('static', filename='fonts/main.ttf')}}");
+    }
+    header{
+      position: sticky;
+      top:0;
+      z-index:10000;
+    }
+    .nav{
+      padding: 0px;
+      margin:0 20px;
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(0,0,0,0.3);
+      height: auto;
+    }
+    .nav ul{
+      display: flex;
+      flex:1;
+      justify-content: space-evenly;
+      max-height: 100%;
+      align-items: center;
+    }
+    .nav ul li{
+      list-style-type: none;
+      font-size: 17px;
+      max-height: 100%;
+    }
+    .nav ul li a{
+      text-decoration: none;
+      color:white;
+    }
+    .title{
+      flex:2;
+    }
+    .brand{
+        font-family: 'main';
+        text-decoration:none;
+        font-size:30px;
+        color:white;
+        margin-left: 25px;
+    }
+    {%block styles%}{% endblock %}
+  </style> 
+  {%block head%}{%endblock%}
+</head>
+<body>
+    <header>
+      <div class="nav">
+        <div class="title">
+          <a href="#" class="brand">ticket</a>
+        </div>
+        <ul>
+          <li><a href="{{url_for("home.index")}}">Home</a></li>
+          {% if session['user'] %}
+            <li><a href="{{url_for("authentication.profile")}}">Welcome,&nbsp;{{session['user']}}</a></li>
+            <li><a href="{{url_for("authentication.logout")}}">Logout</a></li>
+          {%else%}
+            <li><a href="{{url_for("authentication.login")}}">Login</a></li>
+          {%endif%}
+        </ul>
+      </div>
+    </header><br>
+    {% block content %}{% endblock %}
+</body>
+</html>

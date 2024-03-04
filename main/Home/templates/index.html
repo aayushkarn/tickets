@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+    .movie-parent{
+        padding:30px 0;
+    }
+    .upcoming-parent{
+        padding:30px 0;
+    }
+    .heading{
+        margin: 20px;
+    }
+    .movie-container {
+        margin: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 47px;
+        z-index: 20;
+        /* justify-content: center; */
+    }
+
+    .movie{
+        position: relative;
+        width: 200px; /* Adjust based on your design */
+        height: 300px; /* Adjust based on your design */
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+    }
+
+    .movie:hover{
+        transform: scale(1.05);
+        filter: grayscale(0.5);
+    }
+
+    .movie img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        color: white;
+        box-sizing: border-box;
+    }
+    .title{
+        font-size: large;
+        font-weight: 700;
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="movie-parent">
+        {% if currentMovies %}
+        <h2 class="heading">Movies</h2>
+            <div class="movie-container">
+                {% for movie in currentMovies %}
+                    <a href="{{url_for("home.movie", id=movie.id)}}">
+                        <div class="movie">
+                            <img src="{{url_for("static", filename=movie.poster_url)}}">
+                            <div class="info">
+                                <p class="title">{{movie.title}}</p>
+                                <p class="extras">{{movie.certificate.value}} | {{movie.duration}}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="margin:50px 20px;">Sorry no running movies</p>
+        {% endif %}
+    </div>
+
+    <div class="upcoming-parent">
+        {% if upcomingMovies %}
+        <h2 class="heading">Upcoming Movies</h2>
+            <div class="movie-container">
+                {% for movie in upcomingMovies %}
+                    <div class="movie">
+                        <img src="{{url_for("static", filename=movie.poster_url)}}">
+                        <div class="info">
+                            <p class="title">{{movie.title}}</p>
+                            <p class="extras">{{movie.certificate.value}} | {{movie.duration}} | {{movie.release_date}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="margin:50px 20px;">No upcoming movies</p>
+        {% endif %}
+    </div>
+{% endblock %}

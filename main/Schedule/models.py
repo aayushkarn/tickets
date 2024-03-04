@@ -36,7 +36,7 @@ class Schedule(db.Model):
         self.start_time = start_time
         self.end_time = end_time
     def __repr__(self):
-        return f"{self.movieref.title}->{self.screenref.name}->{self.start_time} to {self.end_time}"
+        return f"{self.movieref.title} | {self.screenref.name} | {self.start_time} to {self.end_time}"
  
 
 

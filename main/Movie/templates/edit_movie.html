@@ -11,6 +11,7 @@
 
 <h1>Edit Movie</h1>
 <form action={{url_for("movie.edit_movie", id=movie.id)}} method="POST" enctype="multipart/form-data">
+
     <img src="{{url_for('static', filename=movie.poster_url)}}" width=100 height=100><br>
     Poster <input type="file" name="poster" value="{{movie.poster_url}}"><br>
     Title <input type="text" name="title" value={{movie.title}}><br>
@@ -32,6 +33,16 @@
     </select><br>
     Release Date
     <input type="date" name="release" value="{{movie.release_date}}"><br>
+    Status
+    <select name="status">
+        {% for name, value in movieStatus %}
+            <option value={{name}}
+            {% if name==movie.status.value %}selected{%endif%}
+            >
+            {{value}}
+        </option>
+        {% endfor %}
+    </select><br>
     <button type="submit">Submit</button>
     <br>
     <a href="{{url_for("movie.movie_list")}}">List</a>&nbsp;

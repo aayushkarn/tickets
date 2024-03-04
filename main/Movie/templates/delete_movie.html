@@ -8,6 +8,7 @@
 <h1>Delete Movie</h1>
 
 <form action={{url_for("movie.delete_movie", id=movie.id)}} method="POST">
+
     <img src={{url_for('static', filename=movie.poster_url)}}>
     <h3>Delete <i>{{movie.title}}</i>?</h3>
     <button type="submit">Delete</button>

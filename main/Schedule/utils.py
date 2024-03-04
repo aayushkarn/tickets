@@ -1,11 +1,12 @@
 from datetime import datetime
 from main import db
 from main.Authentication.utils import commitDB
+from main.Movie.models import Movie
 
 from main.Movie.utils import checkIfInputEmptyVAL, getMovieById, strDateTimeToPythonDateTime
 from main.Screen.utils import getScreenById
 from main.Seats.models import SeatType
-from .models import Price, Schedule, ScheduleStatus
+from .models import Price, PriceStatus, Schedule, ScheduleStatus
 
 def pythonDateTimeToHtml(_datetime):
     # 2024-02-21 18:23:00 to 2024-02-21T14:59
@@ -50,7 +51,7 @@ def hasScheduleExpired(end_time):
 
 def getAllMovieAndScreenInSchedule(expire=None):
     if expire:
-        schedules = Schedule.query.filter(Schedule.status!=ScheduleStatus.EXPIRED).join(Schedule.movieref).join(Schedule.screenref).order_by(Schedule.start_time).all()
+        schedules = Schedule.query.join(Schedule.movieref).join(Schedule.screenref).join(Schedule.priceref).filter(Schedule.status!=ScheduleStatus.EXPIRED, Price.status == PriceStatus.ENABLED).order_by(Schedule.start_time).all()
     else:
         schedules = Schedule.query.join(Schedule.movieref).join(Schedule.screenref).order_by(Schedule.start_time).all()            
     return schedules
@@ -90,7 +91,7 @@ def getPriceList():
 
 def getPriceListOnlyId():
     unique = Price.query.group_by(Price.uniqueid).distinct().all()
-    return [(u.uniqueid, u.name) for u in unique]
+    return [(u.uniqueid, u.name, u.status) for u in unique]
 
 
 def getPriceListById(id):
@@ -147,3 +148,10 @@ def checkIfPositiveFloat(value):
 def checkIfUniqueNameExists(uniqueid):
     return Price.query.filter(Price.uniqueid == uniqueid).all()
 
+def isScheduleBeforeRelease(movie, starttime):
+    start_date = strDateTimeToPythonDateTime(starttime).date()
+    movie = Movie.query.filter_by(id=movie).first()
+    if movie.release_date>start_date:
+        return True
+    else:
+        return False

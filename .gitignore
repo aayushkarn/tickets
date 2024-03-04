@@ -1,7 +1,7 @@
 *.sqlite3
 __pycache__/
 .env
-.static/
+static/*
 *.jpeg
 *.jpg
 .venv/
