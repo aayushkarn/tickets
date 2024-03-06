@@ -1,5 +1,9 @@
 # Steps
 
+```bash
+pip install -r requirements.py
+```
+
 
 ```bash
 pip run.py
