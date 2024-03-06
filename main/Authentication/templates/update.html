@@ -1,3 +1,14 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+.container{
+    margin:20px;
+}
+{% endblock %}
+
+{% block content %}
+
+<div clas="container">
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         <ul>
@@ -24,3 +35,5 @@
 <a href="{{url_for('authentication.profile')}}">Profile</a><br>
 <a href="{{url_for('authentication.change_password')}}">Change Password</a><br>
 <a href="{{url_for('authentication.delete')}}">Delete</a><br>
+</div>
+{% endblock %}

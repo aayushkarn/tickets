@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+.container{
+    margin: 0 20px;
+    display:flex;
+    height: 85vh;
+    font-family:poppins;
+}
+.left-side{
+    width:20%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    overflow-y:auto;
+    background-color: #242424;
+    color:#ddd;
+}
+
+.left-side h2{
+    margin-top:0;
+    width:100%;
+    background-color:white;
+    color:black;
+    text-align: center;
+    margin-bottom: 0;
+    font-family: Roboto, sans-serif;
+}
+.section{
+    background-color: #333;
+    width: 100%;
+    margin:3px 0;
+}
+.section-item{
+    margin: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+}
+.section-item h3{
+    margin: 2px 0;
+    width:100%;
+    text-align: center;
+    padding:0;
+    font-family: Roboto, sans-serif;
+    border-bottom: 1px solid #555;
+    background-color: #666;
+}
+.section-item a{
+    text-decoration: none;
+    color:white;
+    margin: 5px 0;
+    padding: 5px 10px;
+}
+.section-item a:hover{
+    background-color: #444;
+    color:#fff;
+}
+.right-side{
+    padding: 0 20px;
+    width:80%;
+}
+.error{
+    display: block;
+    margin: 0 20px 20px 20px;
+    background-color: rgba(21, 21, 21, 0.3);
+    font-size:15px;
+    font-family: poppins;
+    padding:5px;
+    border-radius: 5px;
+}
+.error span{
+    padding: 0 10px;
+    overflow: hidden; 
+}
+.error .x{
+    float: right;
+    padding: 0 7px; 
+    cursor: pointer;
+}
+{% block css %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<!--TODO:ERROR NOT SHOWING-->
+<div class="container">
+    <div class="left-side">
+        <h2>Quick Links</h2>
+        <div class="section">
+            <div class="section-item">
+                <a href="{{url_for('authentication.home')}}">Home</a>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-item">
+                <h3>Authentication</h3>
+                <a href="{{url_for('authentication.update')}}">Update</a>
+                <a href="{{url_for('authentication.change_password')}}">Change Password</a>
+                <a href="{{url_for('authentication.delete')}}">Delete</a>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-item">
+                <h3>Movie</h3>
+                <a href="{{url_for('movie.create_movie')}}">Create</a>
+                <a href="{{url_for('movie.movie_list')}}">List</a>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-item">
+                <h3>Booking</h3>
+                <a href="{{url_for('booking.create_booking')}}">Create</a>
+                <a href="">List</a>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-item">
+                <h3>Price</h3>
+                <a href="{{url_for('schedule.create_price')}}">Create</a>
+                <a href="{{url_for('schedule.list_price')}}">List</a>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-item">
+                <h3>Screen</h3>
+                <a href="{{url_for('screen.create_screen')}}">Create</a>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-item">
+                <h3>Seats</h3>
+                <a href="{{url_for('seats.create_seat')}}">Create</a>
+                <a href="{{url_for('seats.show_seats')}}">List</a>
+                <a href="{{url_for('seats.edit_seats')}}">Edit</a>
+                <a href="{{url_for('seats.delete_seats')}}">Delete</a>
+            </div>
+        </div>
+    </div>
+    <div class="right-side">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="error" id="error">
+                {% for msg in messages %}
+                  {% if loop.index <= 1 %}
+                    <span>{{msg}}</span>
+                  {% endif %}
+                {% endfor %}
+            <span class="x" id="x">X</span>
+        </div>
+        {% endif %}
+    {% endwith %}
+       {% block admin %}{% endblock%}
+    </div>
+</div>
+<script>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        var x = document.getElementById("x")
+        var error = document.getElementById("error")
+        x.addEventListener("click", (e)=>{
+            error.style.display = "none";
+        })
+    {%endif%}
+    {% endwith %}
+    </script>
+{% endblock %}

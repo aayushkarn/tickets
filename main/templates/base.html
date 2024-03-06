@@ -16,6 +16,14 @@
       font-family: main;
       src: url("{{url_for('static', filename='fonts/main.ttf')}}");
     }
+    @font-face{
+      font-family: poppins;
+      src: url("{{url_for('static', filename='fonts/poppins/Poppins-Regular.ttf')}}");
+    }
+    @font-face{
+      font-family: Roboto;
+      src: url("{{url_for('static', filename='fonts/roboto/Roboto-Regular.ttf')}}");
+    }
     header{
       position: sticky;
       top:0;
@@ -56,6 +64,24 @@
         color:white;
         margin-left: 25px;
     }
+    .error{
+      display: block;
+      margin: 0 20px 20px 20px;
+      background-color: rgba(21, 21, 21, 0.3);
+      font-size:15px;
+      font-family: poppins;
+      padding:5px;
+      border-radius: 5px;
+  }
+  .error span{
+      padding: 0 10px;
+      overflow: hidden; 
+  }
+  .error .x{
+      float: right;
+      padding: 0 7px; 
+      cursor: pointer;
+  }
     {%block styles%}{% endblock %}
   </style> 
   {%block head%}{%endblock%}
@@ -78,6 +104,30 @@
         </ul>
       </div>
     </header><br>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="error" id="error">
+                {% for msg in messages %}
+                  {% if loop.index <= 1 %}
+                    <span>{{msg}}</span>
+                  {% endif %}
+                {% endfor %}
+            <span class="x" id="x">X</span>
+        </div>
+        {% endif %}
+    {% endwith %}
     {% block content %}{% endblock %}
+    
+    <script>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        var x = document.getElementById("x")
+        var error = document.getElementById("error")
+        x.addEventListener("click", (e)=>{
+            error.style.display = "none";
+        })
+    {%endif%}
+    {% endwith %}
+    </script>
 </body>
 </html>

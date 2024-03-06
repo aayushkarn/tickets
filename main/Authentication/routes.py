@@ -20,7 +20,7 @@ def login():
                     passVerify = verifyPassword(password, user.password)
                     if passVerify:
                         addToSession(user.username)
-                        return redirect(url_for("authentication.profile"))
+                        return redirect(url_for("authentication.home"))
                     else:
                         flash("Wrong password")
                 else:
@@ -57,7 +57,7 @@ def create_user():
                                 saveToDB(newUser)
                                 flash("Registered Successfully")
                                 addToSession(username)
-                                return redirect(url_for('authentication.profile'))
+                                return redirect(url_for('authentication.home'))
                             else:
                                 flash("Password must be of atleast 8 character!")
                         else:
@@ -76,11 +76,23 @@ def create_user():
     
 @authentication.route("/profile/")
 @login_required
-def  profile():
+def profile():
     user = getUserByUsername(session['user'])
     if user == None:
         return redirect(url_for('authentication.logout'))
-    return  render_template("profile.html", user=user)
+    if user.is_superuser:
+        return  render_template("admin/admin_profile.html", user=user)
+    return render_template("profile.html", user=user)
+
+@authentication.route("/home/")
+@login_required
+def home():
+    user = getUserByUsername(session['user'])
+    if user == None:
+        return redirect(url_for('authentication.logout'))
+    if user.is_superuser:
+        return render_template("admin/admin_home.html", user=user)
+    return render_template("profile.html", user=user)
 
 @authentication.route("/logout/")
 @login_required
@@ -95,6 +107,8 @@ def delete():
     user = getUserByUsername(session['user'])
     if user == None:
         return redirect(url_for('authentication.logout'))
+    if user.is_superuser:
+        return render_template("admin/admin_delete.html", user=user)
     if request.method == "POST":
         password = request.form.get("password")
         if verifyPassword(password, user.password):
@@ -111,6 +125,8 @@ def update():
     user = getUserByUsername(session['user'])
     if user == None:
         return redirect(url_for('authenticaion.logout'))
+    if user.is_superuser:
+        return render_template("admin/admin_update.html", user=user)
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
@@ -166,6 +182,8 @@ def change_password():
     user = getUserByUsername(session['user'])
     if user == None:
         return redirect(url_for("authentication.logout"))
+    if user.is_superuser:
+        return render_template("admin/admin_change_password.html", user=user)
     if request.method == "POST":
         password = request.form.get("password")
         newPassword = request.form.get("newPassword")
@@ -188,7 +206,7 @@ def change_password():
                             user.password = hashPassword(newPassword)
                             commitDB()
                             flash("Password changed!")
-                            return redirect(url_for("authentication.profile"))
+                            return redirect(url_for("authentication.home"))
                         else:
                             flash("Old Password and New Password cannot be same!")
     return  render_template("change_password.html", user=user)

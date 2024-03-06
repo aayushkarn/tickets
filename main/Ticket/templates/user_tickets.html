@@ -18,7 +18,9 @@
         {% for ticket in tickets %}
         <div class="ticket">
             <div class="ticket">
-                <h4>{{ ticket.tagid }}</h4>
+                <h4>{{ ticket.scheduleref.movieref.title }}</h4>
+                <span>{{ ticket.scheduleref.start_time.date() }}</span> | 
+                <span>{{ ticket.scheduleref.start_time.time() }}</span>
                 <p>Status: {{ ticket.ticket_status }}</p>
             </div>
         </div>

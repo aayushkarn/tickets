@@ -1,20 +1,98 @@
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for msg in messages %}
-            <li>{{msg}}</li>
-        
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
-<h1>Register User</h1>
-<form action="{{url_for('authentication.create_user')}}" method="POST">
-    Name <input type="name" name="name" value="{{values.name}}"><br>
-    Username <input type="text" name="username" value="{{values.username}}"><br>
-    Email <input type="email" name="email" value="{{values.email}}"><br>
-    Password <input type="password" name="password"><br>
-    <button type="submit">Register</button>
-</form>
+{% extends 'base.html' %}
 
-<a href="{{url_for('authentication.login')}}">Login here</a><br>
+{% block styles %}
+.container{
+    margin: 0 20px;
+    display:flex;
+    height: 85vh;
+    font-family:poppins;
+}
+.form-container{
+    width:50%;
+    background-color:white;
+    color:black;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+form{
+    width:80%;
+}
+form input{
+    width:100%;
+    box-sizing:border-box;
+    padding:10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+label{
+    display:block;
+    margin-bottom:0.2em;
+    color:#333232;
+    font-weight:lighter;
+}
+form button{
+    width:100%;
+    padding:10px;
+    background-color: #242424;
+    color: white;
+    font-size:16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+form button:hover{
+    background-color:#333232;
+}
+
+.right-side{
+    background-color:#242424;
+    width:50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;        
+    flex-direction: column;
+    text-align: center;
+}
+.right-side .register-text{
+    margin-bottom: 0.5em;
+    font-size: 2em;
+}
+.right-side a{
+    text-decoration: none;
+    color:white;
+    font-size:16px;
+    padding:16px;
+    border: 1px solid white;
+    border-radius: 5px;
+    transition: 0.2s ease-in-out;
+}
+.right-side a:hover{
+    background-color: white;
+    color:black;
+}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="form-container">
+        <h1>Register</h1>
+        <form action="{{url_for('authentication.create_user')}}" method="POST">
+            Name <input type="name" name="name" value="{{values.name}}"><br>
+            Username <input type="text" name="username" value="{{values.username}}"><br>
+            Email <input type="email" name="email" value="{{values.email}}"><br>
+            Password <input type="password" name="password"><br>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+    <div class="right-side">
+        <div class="register-text">Already a user? <span>Signin now</span></div>
+            <a href="{{url_for('authentication.login')}}">Login here</a><br>
+        </a>
+    </div>
+</div>
+
+{% endblock %}
