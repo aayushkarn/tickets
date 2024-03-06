@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+    .container{
+        text-align:center;
+    }
+    .container a{
+        text-decoration:none;
+        color:white;
+        background-color:blue;
+        padding:5px 10px;
+        border-radius:5px;
+    }
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Something went wrong</h1>
+    <a href="{{url_for('home.index')}}">Goto Home</a>
+</div>
+{% endblock %}

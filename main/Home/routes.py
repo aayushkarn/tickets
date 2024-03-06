@@ -1,10 +1,12 @@
 import json
 from flask import Blueprint, redirect, session, url_for, render_template
 from main.Authentication.utils import login_required
-from main.Booking.utils import getSeats
+from main.Booking.utils import cleanLongHoldSeats, getSeats
 from main.Movie.models import MovieStatus
 
 from main.Movie.utils import checkIfInputEmptyVAL, getImagePath, getMovieById
+from main.Payment.utils import deletePaymentWithNullBookingId
+from main.config import Config
 from .utils import *
 
 home = Blueprint("home",__name__,template_folder="templates")
@@ -29,6 +31,8 @@ def movie(id):
 @home.route("/movieSeat/<int:id>")
 @login_required
 def movieSeat(id):
+    cleanLongHoldSeats()
+    deletePaymentWithNullBookingId()
     seats = getSeats(id)
     if checkIfInputEmptyVAL(seats) or isUpcomingSchedule(id):
         return redirect(url_for("home.index"))
@@ -43,7 +47,7 @@ def movieSeat(id):
     movie["date"]= movieId.start_time.date()
     movie["time"]= movieId.start_time.time()
     movie["screen"]= movieId.screenref.name
-    selectionLimit = 2 #TODO: make it dynamic 
+    selectionLimit = Config.SEAT_SELECTION_LIMIT 
 
 
     return render_template("seat.html", seats=seats, highestColumn=highestColumn, highestRow=highestRow, seatPrice=seatPrice, movie=movie, selectionLimit=selectionLimit, scheduleid=id)

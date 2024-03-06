@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block styles %} 
+.container{
+    margin:20px;
+}
+.ticket {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Your Tickets</h1>
+    {% if tickets %}
+        {% for ticket in tickets %}
+        <div class="ticket">
+            <div class="ticket">
+                <h4>{{ ticket.tagid }}</h4>
+                <p>Status: {{ ticket.ticket_status }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <h3><i>You have not booked any tickets yet!</i></h3>
+    {% endif %}
+</div>
+    
+{% endblock %}

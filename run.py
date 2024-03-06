@@ -8,4 +8,4 @@ app = create_app()
 #     return send_file(path)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(threaded=True)

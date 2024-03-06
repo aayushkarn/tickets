@@ -11,6 +11,7 @@ from .Schedule.routes import schedule
 from .Booking.routes import booking
 from .Home.routes import home
 from .Payment.routes import payment
+from .Ticket.routes import ticket
 import os
 
 def create_app():
@@ -35,6 +36,7 @@ def create_app():
     app.register_blueprint(schedule, url_prefix="/schedule/")
     app.register_blueprint(booking, url_prefix="/booking/")
     app.register_blueprint(payment, url_prefix="/payment/")
+    app.register_blueprint(ticket, url_prefix="/ticket/")
     app.register_blueprint(home, url_prefix="/")
 
     return app

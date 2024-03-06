@@ -1,7 +1,10 @@
+from datetime import datetime, timedelta, timezone
 import json
+from main.Authentication.utils import commitDB, deleteFromDB
 from main.Movie.utils import checkIfInputEmptyVAL
 from main.Schedule.utils import getPriceListWithSameId
 from main.Seats.models import Seats
+from main.config import Config
 from .models import Booking, BookingStatus
 from main.Schedule.models import PriceStatus, Schedule
 
@@ -59,3 +62,12 @@ def getSeats(scheduleid):
 def getBookingById(id):
     booking = Booking.query.filter_by(id=id).first()
     return booking
+
+def cleanLongHoldSeats():
+    booking = Booking.query.filter(Booking.status==BookingStatus.HOLD, Booking.created_at <= datetime.now()-timedelta(minutes=Config.MAX_SEAT_HOLD_DURATION_IN_MIN)).all()
+    # booking = Booking.query.filter(Booking.status==BookingStatus.HOLD).all()
+    print(booking)
+    for b in booking:
+        print(b)
+        # print(b.created_at<=datetime.now()-timedelta(minutes=Config.MAX_SEAT_HOLD_DURATION_IN_MIN))
+        deleteFromDB(b)

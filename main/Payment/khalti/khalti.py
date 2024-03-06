@@ -39,17 +39,11 @@ from ..utils import DateTimeEncoder, generatePaymentInfo
 def initkhalti():
     info = generatePaymentInfo()
     url = Config.KHALTI_BASE_URL + "epayment/initiate/"
-    return_url = url_for("home.index", _scheme="http")
+    return_url = url_for("payment.khalti.finalize_payment", _scheme="http")
     website_url = url_for("home.index", _scheme="http")
     amount = info['totalPrice']*100
-    purchase_order_id = info['transactionid']
+    purchase_order_id = info['uniqueid']
 
-
-    # print("url",url)
-    # print("return_url",return_url)
-    # print("web_url",website_url)
-    # print("amount",amount)
-    # print("purchase_order_id",purchase_order_id)
     product_details=[]
     for movie in info['movieInfo']:
         product_details.append({
@@ -77,7 +71,6 @@ def initkhalti():
         "product_details":product_details
     }, cls=DateTimeEncoder)
 
-    # put your own live secet for admin
     headers = {
         'Authorization': f'key {Config.KHALTI_SECRET_KEY}',
         'Content-Type': 'application/json',
@@ -87,5 +80,21 @@ def initkhalti():
     # print(json.loads(response.text))
 
 
-    return response.text
+    return json.loads(response.text)
 
+
+def verifyPayment(pidx):
+    url = Config.KHALTI_BASE_URL+'epayment/lookup/'
+    pidx = pidx
+    data = json.dumps({
+        "pidx":pidx
+    })
+
+    headers = {
+        'Authorization': f'key {Config.KHALTI_SECRET_KEY}',
+        'Content-Type': 'application/json',
+    }
+    
+    response = requests.request("POST", url, headers=headers, data=data)
+    res = json.loads(response.text)
+    return res
