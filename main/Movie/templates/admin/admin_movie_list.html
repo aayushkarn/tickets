@@ -1,0 +1,80 @@
+{% extends 'admin.html' %}
+
+{% block css %}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0px;
+    font-family: Arial, sans-serif;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+}
+
+tr {
+    background-color: #666;
+}
+
+td, th {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.expired {
+    background-color: #f44336;
+    color: white;
+}
+
+a {
+    color: white; 
+    text-decoration: none;
+    padding:10px;
+}
+
+a:hover {
+    color: #555;
+    background-color: white;
+}
+
+img {
+    max-width: 100px;
+    height: auto;
+}
+
+{% endblock %}
+
+{% block admin %}
+    <div class="form-container">
+        <h1>List Movies</h1>
+        {% if moviesList %}
+            <table style="width:100%;">
+                <tr>
+                    <th>Poster</th>
+                    <th>Title</th>
+                    <th>Duration(in min)</th>
+                    <th>Certificate</th>
+                    <th>Release Date</th>
+                    <th colspan=2>Actions</th>
+                </tr>
+                {% for m in moviesList %}
+                    <tr {% if m.status.value=="EXPIRED" %}class="expired"{% endif %}>
+                        <td><img src="{{url_for('static', filename=m.poster_url)}}"></td>
+                        <td><strong>{{m.title}}</strong></td>
+                        <td>{{m.duration}}</td>
+                        <td>{{m.certificate.value}}</td>
+                        <td>{{m.release_date}}</td>
+                        <td><a href="{{url_for("movie.edit_movie",id=m.id)}}">Edit</a></td>
+                        <td><a href="{{url_for("movie.delete_movie",id=m.id)}}">Delete</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+        No movies yet. Goto "Create" to create movie
+        {% endif %}
+    </div>
+{%endblock%}

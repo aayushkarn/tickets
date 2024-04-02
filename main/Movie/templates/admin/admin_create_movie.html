@@ -1,0 +1,110 @@
+{% extends 'admin.html' %}
+
+{% block css %}
+.form-container{
+    background-color:white;
+    color:black;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+form{
+    width:80%;
+}
+form input{
+    width:100%;
+    box-sizing:border-box;
+    padding:10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+label{
+    display:block;
+    margin-bottom:0.2em;
+    color:#333232;
+    font-weight:lighter;
+}
+form button{
+    width:100%;
+    padding:10px;
+    background-color: #242424;
+    color: white;
+    font-size:16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+form button:hover{
+    background-color:#333232;
+}
+form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none; 
+}
+select{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    appearance: none; 
+    
+}
+{% endblock %}
+
+{% block admin %}
+    <div class="form-container">
+        <h1>Create Movie</h1>
+        <form action={{url_for("movie.create_movie")}} method="POST" enctype="multipart/form-data">
+            <label>Poster</label> <input type="file" name="poster"><br>
+            <label>Banner</label> <input type="file" name="banner"><br>
+            <label>Title</label> <input type="text" name="title" value={{temp.title}}><br>
+            <label>Description</label> <textarea name="description">{{temp.description}}</textarea><br>
+            <label>Trailer Link</label> <input type="text" name="trailer"><br>
+            <label>Duration</label> <input type="number" name="duration"><br>
+            <label>Certificate</label>
+
+            <select name="certificate">
+                {% for name, value in movieCertificate %}
+                    <option value={{name}} 
+                    {% if temp.certificate %}
+                        {% if name==temp.certificate %}selected{%endif%}
+                    {%else%}
+                        {% if name=="UA" %}selected{%endif%}
+                    {%endif%}
+                    >
+                        {{value}}
+                    </option>
+                {% endfor %}
+            </select><br>
+            <label>Release Date</label>
+            <input type="date" name="release"><br>
+            <label>Status</label>
+            <select name="status">
+                {% for name, value in movieStatus %}
+                    <option value={{name}}
+                    {% if temp.status %}
+                        {% if name==temp.status %}selected{%endif%}
+                    {% else %}
+                        {% if name=="ACTIVE" %}selected{%endif%}
+                    {%endif%}
+                    >
+                    {{value}}
+                </option>
+                {% endfor %}
+            </select><br>
+            <button type="submit">Submit</button>
+            <br>
+        </form>
+        <br>
+        <br>
+    </div>
+{%endblock%}

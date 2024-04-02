@@ -17,6 +17,7 @@ class Movie(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     poster_url = db.Column(db.String(200))
+    banner_url = db.Column(db.String(200))
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text())
     trailer_link = db.Column(db.Text())
@@ -27,8 +28,9 @@ class Movie(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
-    def __init__(self, poster, title, description, traile_link, duration, certificate, status, release):
+    def __init__(self, poster, banner, title, description, traile_link, duration, certificate, status, release):
         self.poster_url = poster
+        self.banner_url = banner
         self.title = title
         self.description = description
         self.trailer_link = traile_link

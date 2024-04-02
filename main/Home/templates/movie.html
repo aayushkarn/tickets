@@ -1,132 +1,53 @@
 {% extends 'base.html' %}
 
-{% block styles %}
-.movie-details {
-    display: flex;
-    align-items: flex-start;
-    margin:20px;
-}
-
-.movie-details img {
-    width: 300px;
-    height: auto;
-    margin-right: 20px;
-}
-
-.movie-info {
-    display: flex;
-    width: 100%;
-    /*align-items: center; */
-    flex-direction: column;
-}
-
-.movie-info h1 {
-    margin: 0;
-    margin-bottom: 10px;
-}
-
-.movie-info p, .movie-info a {
-    margin: 0;
-    margin-bottom: 10px;
-}
-
-.schedules {
-    padding: 20px 0;
-    /*border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
-    width:100%;
-}
-
-.schedules h2 {
-    margin: 0;
-    margin-bottom: 10px;
-}
-
-.schedule-section{
-    border:1px solid white;
-    text-align: center;
-}
-.schedule-section h4{
-    padding:0;
-    margin:0;
-}
-
-.trailerBtn{
-    text-decoration: none;
-    font-size: large;
-    font-weight: 500;
-    width: fit-content;
-    background-color: blue;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.trailerBtn:hover{
-    background-color: darkblue;
-}
-
-.schedules ul {
-    list-style-type: none;
-    padding: 0;
-    width:100%;
-    display: flex;
-    
-}
-.schedules ul li {
-    margin: 7px;
-    width: fit-content;
-}
-.schedule{
-    background-color: green;
-    width: fit-content;
-    padding: 3px 10px;
-}
-.schedule a{
-    text-decoration: none;
-    color:white;
-}
+{% block head %}
+<link rel="stylesheet" href="{{url_for('home.static', filename='css/movie.css')}}">
 {% endblock %}
+
+{%block styles%}
+.movie-detail-container{
+    background-image: linear-gradient(to right, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0) 100%), url('{{url_for('static',filename=movie.banner_url)}}');
+}
+{%endblock%}
 
 {% block content %}
 
-<div class="movie-details">
-    <img src="{{url_for('static', filename=movie.poster_url)}}" alt="{{movie.title}}" class="movie-image">
-    <div class="movie-info">
-        <h1>{{movie.title}}</h1>
-        <p>Certificate: {{movie.certificate.value}}</p>
-        <p>Duration: {{movie.duration}}</p>
-        <p>Description: {{movie.description}}</p>
-        <a href="{{movie.trailer_link}}" class="trailerBtn" target="_blank">Watch trailer</a>
-        <div class="schedules">
-        <h2>Movie Schedules</h2>
-            {% if movieSchedule %}
-                {% for key, value in movieSchedule.items() %}
-                    <div class="schedule-section">   
-                        <h4 class="dateHead">{{key}}</h4>
-                            <ul>
-                                {% for v in value %}
-                                    <li>
-                                        <div class="schedule">
-                                            <a href="{{url_for("home.movieSeat", id=v.id)}}"
-                                                <p>{{v.screenref.name}}</p>
-                                                <p>{{v.start_time.strftime('%H:%M')}}</p>
-                                            </a>
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                    </div><br>
-                {% endfor %}
-            {%else%}
-                <p>Sorry, no schedules for this movie has been assigned yet!</p>
-            {%endif%}
+
+<section class="movie-detail-container">
+    <img src="{{url_for('static', filename=movie.poster_url)}}" alt="{{movie.title}}">
+        <div class="movie-info">
+            <h1>{{movie.title}}</h1>
+            <p>{{movie.certificate.value}} | {{movie.duration}} min</p>
+            <p class="description">{{movie.description}}</p>
+            <a href="{{movie.trailer_link}}" target="_blank">Watch Trailer</a>
         </div>
-    </div>
-</div>
+</section>
+
+<section class="schedules">
+    <h2 class="schedule-brand">Movie Schedules</h2>
+    {% if movieSchedule %}
+        {% for key, value in movieSchedule.items() %}
+            <div class="movie-schedule">
+                <h4 class="dateHead">{{key}}</h4>
+                <ul>
+                    {% for v in value %}
+                    <li>
+                        <a href="{{url_for("home.movieSeat", id=v.id)}}">
+                            <p>{{v.screenref.name}}</p>
+                            <p>{{v.start_time.strftime('%H:%M')}}</p>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {%endfor%}
+    {%else%}
+        <p class="no-schedule">Sorry, no schedules for this movie has been assigned yet!</p>
+    {%endif%}
+</section>
+
+
+
 
 
 {% endblock %}

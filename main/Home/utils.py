@@ -24,7 +24,7 @@ def isUpcomingSchedule(id):
     return False if resp==[] else True
 
 def getMovieSchedule(id):
-    resp = Schedule.query.join(Schedule.priceref).filter(Schedule.movie==id, Schedule.start_time>datetime.now()+timedelta(minutes=15), Schedule.status==ScheduleStatus.UPCOMING, Price.status==PriceStatus.ENABLED).order_by(Schedule.start_time).all()
+    resp = Schedule.query.filter(Schedule.movie==id, Schedule.start_time>datetime.now()+timedelta(minutes=15), Schedule.status==ScheduleStatus.UPCOMING, Price.status==PriceStatus.ENABLED).order_by(Schedule.start_time).all()
 
     schedules_by_date = {}
     for schedule in resp:
@@ -33,8 +33,8 @@ def getMovieSchedule(id):
         # time = schedule.start_time.time()
         if date not in schedules_by_date:
             schedules_by_date[date] = []
-        print((schedule))
+        # print((schedule))
         schedules_by_date[date].append(schedule)
 
-    print(schedules_by_date)
+    # print(schedules_by_date)
     return schedules_by_date

@@ -17,11 +17,19 @@ def create_screen():
             if getScreenByUniqueName(uniqueName) == None:
                 newScreen = Screen(name=name, unique_name=uniqueName)
                 saveToDB(newScreen)
+                flash("Saved")
+                return redirect(url_for("screen.list_screen"))
             else:
                 flash("Name must be unique")
         else:
             flash("Name cannot be empty")
     return render_template("screen/create_screen.html", screens=getAllScreen())
+
+@screen.route("/list/", methods=['GET','POST'])
+@login_required
+@superuser_required
+def list_screen():
+    return render_template("screen/list_screen.html", screens=getAllScreen())
 
 @screen.route("/edit/<int:id>", methods=['GET','POST'])
 @login_required
@@ -37,12 +45,13 @@ def edit_screen(id):
                 screen.name = name
                 screen.unique_name = unique
                 commitDB()
-                return redirect(url_for("screen.create_screen"))
+                flash("Edited")
+                return redirect(url_for("screen.list_screen"))
             else:
                 flash("Screen with same name already exists")
     else:
         flash("No such screen exists")
-        return redirect(url_for("screen.create_screen"))
+        return redirect(url_for("screen.list_screen"))
     return render_template("screen/edit_screen.html", screens=screen)
 
 
@@ -54,8 +63,8 @@ def delete_screen(id):
     if not isNone(screen):
         if request.method == "POST":
                 deleteFromDB(screen)
-                return redirect(url_for("screen.create_screen"))
+                return redirect(url_for("screen.list_screen"))
     else:
         flash("No such screen exists")
-        return redirect(url_for("screen.create_screen"))
+        return redirect(url_for("screen.list_screen"))
     return render_template("screen/delete_screen.html", screens=screen)

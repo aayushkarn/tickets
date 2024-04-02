@@ -17,7 +17,7 @@ booking = Blueprint("booking", __name__, template_folder="templates")
 def create_booking():
     users = User.query.all()
     schedules = getAllMovieAndScreenInSchedule(expire=1)
-
+    currentUser = getUserByUsername(session['user'])
     newSchedule = []
     for schedule in schedules:
         if not schedule.start_time>datetime.now()+timedelta(minutes=15):
@@ -60,6 +60,8 @@ def create_booking():
                                 saveToDB(newBooking)
                                 flash("Saved")
 
+    if currentUser.is_superuser:
+        return render_template("admin/admin_create_booking.html", users=users, schedules=newSchedule, bookingStatus=bookingStatus, temp={})    
     return render_template("create_booking.html", users=users, schedules=newSchedule, bookingStatus=bookingStatus, temp={})
 
 @booking.route("/get-screen/", methods=['POST'])

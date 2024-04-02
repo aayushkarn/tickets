@@ -1,51 +1,120 @@
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for msg in messages %}
-            <li>{{msg}}</li>
-        
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
+{% extends "admin.html" %}
 
-<h1>Edit Movie</h1>
-<form action={{url_for("movie.edit_movie", id=movie.id)}} method="POST" enctype="multipart/form-data">
+{% block styles %}
+.movie-edit-container{
+    font-family:Poppins;
+}
+.form-container {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px; 
+    width: 80%; 
+    margin: auto;
+}
 
-    <img src="{{url_for('static', filename=movie.poster_url)}}" width=100 height=100><br>
-    Poster <input type="file" name="poster" value="{{movie.poster_url}}"><br>
-    Title <input type="text" name="title" value={{movie.title}}><br>
-    Description <textarea name="description">{{movie.description}}</textarea><br>
-    Trailer Link <input type="text" name="trailer" value={{movie.trailer_link}}><br>
-    Duration <input type="number" name="duration" value={{movie.duration}}><br>
-    Certificate
+form {
+    width: 100%; 
+}
 
-    <select name="certificate">
-        {% for name, value in movieCertificate %}
-            <option value={{name}} 
-            {% if movie.certificate %}
-                {% if name==movie.certificate.name %}selected{%endif%}
-            {%endif%}
-            >
+form input,
+form select,
+form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form textarea {
+    resize: none;
+}
+
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #242424;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+
+form button:hover {
+    background-color: #333232;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.2em;
+    color: #333232;
+    font-weight: lighter;
+}
+
+form img {
+    width: 100px;
+    height: 100px;
+    object-fit: fit-content; 
+    margin-bottom: 20px;
+}
+ 
+{%endblock%}
+
+
+{%block subMenu%}
+<li><a href="{{url_for('movie.create_movie')}}">Create Movie</a></li>
+{%endblock%}
+
+{%block content%}
+<section class="movie-edit-container">
+    <h1>Edit Movie</h1>
+    <form action={{url_for("movie.edit_movie", id=movie.id)}} method="POST" enctype="multipart/form-data">
+
+        Poster 
+        <img src="{{url_for('static', filename=movie.poster_url)}}" width=100 height=100><br>
+        <input type="file" name="poster"><br>
+        Banner 
+        <img src="{{url_for('static', filename=movie.banner_url)}}" width=100 height=100><br>
+        <input type="file" name="banner"><br>
+        Title <input type="text" name="title" value={{movie.title}}><br>
+        Description <textarea name="description">{{movie.description}}</textarea><br>
+        Trailer Link <input type="text" name="trailer" value={{movie.trailer_link}}><br>
+        Duration <input type="number" name="duration" value={{movie.duration}}><br>
+        Certificate
+
+        <select name="certificate">
+            {% for name, value in movieCertificate %}
+                <option value={{name}} 
+                {% if movie.certificate %}
+                    {% if name==movie.certificate.name %}selected{%endif%}
+                {%endif%}
+                >
+                    {{value}}
+                </option>
+            {% endfor %}
+        </select><br>
+        Release Date
+        <input type="date" name="release" value="{{movie.release_date}}"><br>
+        Status
+        <select name="status">
+            {% for name, value in movieStatus %}
+                <option value={{name}}
+                {% if name==movie.status.value %}selected{%endif%}
+                >
                 {{value}}
             </option>
-        {% endfor %}
-    </select><br>
-    Release Date
-    <input type="date" name="release" value="{{movie.release_date}}"><br>
-    Status
-    <select name="status">
-        {% for name, value in movieStatus %}
-            <option value={{name}}
-            {% if name==movie.status.value %}selected{%endif%}
-            >
-            {{value}}
-        </option>
-        {% endfor %}
-    </select><br>
-    <button type="submit">Submit</button>
+            {% endfor %}
+        </select><br>
+        <button type="submit">Submit</button>
+        <br>
+    </form>
     <br>
-    <a href="{{url_for("movie.movie_list")}}">List</a>&nbsp;
-</form>
-<br>
-<br>
+    <br>
+</section>
+{%endblock%}

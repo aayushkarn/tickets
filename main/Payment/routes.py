@@ -11,7 +11,7 @@ from main.config import Config
 from main.Payment.khalti.routes import khalti
 from main.Payment.mock.routes import mock
 
-payment = Blueprint("payment", __name__, template_folder="templates")
+payment = Blueprint("payment", __name__, template_folder="templates", static_folder='static')
 payment.register_blueprint(khalti, url_prefix='/khalti/')
 payment.register_blueprint(mock, url_prefix='/mock/')
 
@@ -67,3 +67,10 @@ def home():
 @login_required
 def errorPage():
     return render_template("error.html")
+
+# @payment.route("/redirect-payment/")
+# @login_required
+# def redirectTicket(tagid):
+#     redirect_url = url_for("ticket.index", tagid=tagid)
+#     print(redirect_url)
+#     return render_template('payment_finalize.html')

@@ -1,20 +1,62 @@
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for msg in messages %}
-            <li>{{msg}}</li>
-        
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
+{% extends "admin.html" %}
 
-<h1>Edit Screen</h1>
-<form action={{url_for("screen.edit_screen", id=screens.id)}} method="POST">
+{% block styles %}
+.screen-edit-container{
+    font-family:Poppins;
+}
+h1{
+    margin-bottom:20px;
+}
+form {
+    width: 100%; 
+}
 
-    Name <input type="name" name="name" value="{{screens.name}}">
-    <button type="submit">Update</button>
-</form>
+form input{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
 
-<br><br>
-<a href="{{url_for("screen.create_screen")}}">Back to Screen</a>
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #242424;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+
+form button:hover {
+    background-color: #333232;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.2em;
+    color: #333232;
+    font-weight: 300;
+}
+{%endblock%}
+
+{%block subMenu%}
+<li><a href="{{url_for('screen.create_screen')}}">Create</a></li>
+{%endblock%}
+
+{%block content%}
+<section class="screen-edit-container">
+    <h1>Edit Screen</h1>
+    <form action={{url_for("screen.edit_screen", id=screens.id)}} method="POST">
+
+        <label>Name</label> <input type="name" name="name" value="{{screens.name}}">
+        <button type="submit">Update</button>
+    </form>
+
+    <br><br>
+</section>
+{%endblock%} 

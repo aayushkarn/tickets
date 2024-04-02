@@ -3,7 +3,7 @@ from .models import User
 from .validator import *
 from .utils import *
 
-authentication = Blueprint('authentication', __name__, template_folder="templates")
+authentication = Blueprint('authentication', __name__, template_folder="templates", static_folder='static')
 
 @authentication.route("/", methods=['GET', 'POST'])
 @login_not_required
@@ -20,7 +20,7 @@ def login():
                     passVerify = verifyPassword(password, user.password)
                     if passVerify:
                         addToSession(user.username)
-                        return redirect(url_for("authentication.home"))
+                        return redirect(url_for("home.index"))
                     else:
                         flash("Wrong password")
                 else:
@@ -57,7 +57,7 @@ def create_user():
                                 saveToDB(newUser)
                                 flash("Registered Successfully")
                                 addToSession(username)
-                                return redirect(url_for('authentication.home'))
+                                return redirect(url_for('home.index'))
                             else:
                                 flash("Password must be of atleast 8 character!")
                         else:
@@ -107,8 +107,6 @@ def delete():
     user = getUserByUsername(session['user'])
     if user == None:
         return redirect(url_for('authentication.logout'))
-    if user.is_superuser:
-        return render_template("admin/admin_delete.html", user=user)
     if request.method == "POST":
         password = request.form.get("password")
         if verifyPassword(password, user.password):
@@ -116,6 +114,8 @@ def delete():
             return redirect(url_for("authentication.logout"))
         else:
             flash("Wrong Password!")
+    if user.is_superuser:
+        return render_template("admin/admin_delete.html", user=user)
     return render_template("delete.html", user=user)
     
 @authentication.route("/update/", methods=['GET', "POST"])
@@ -125,8 +125,7 @@ def update():
     user = getUserByUsername(session['user'])
     if user == None:
         return redirect(url_for('authenticaion.logout'))
-    if user.is_superuser:
-        return render_template("admin/admin_update.html", user=user)
+    
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
@@ -172,8 +171,11 @@ def update():
                 commitDB()
                 session.pop('user', None)
                 addToSession(user.username)
+        if user.is_superuser:
+            return render_template("admin/admin_update.html", user=temp)
         return render_template("update.html", user=temp)
-
+    if user.is_superuser:
+        return render_template("admin/admin_update.html", user=user)
     return render_template("update.html", user=user)
 
 @authentication.route("/change_password/", methods=['GET', 'POST'])
@@ -182,14 +184,12 @@ def change_password():
     user = getUserByUsername(session['user'])
     if user == None:
         return redirect(url_for("authentication.logout"))
-    if user.is_superuser:
-        return render_template("admin/admin_change_password.html", user=user)
     if request.method == "POST":
         password = request.form.get("password")
         newPassword = request.form.get("newPassword")
         confirmPassword = request.form.get("confirmPassword")
 
-
+        print(password, newPassword, confirmPassword)
         if not checkPasswordEmpty(password):
             flash("Password empty")
         else:
@@ -202,13 +202,19 @@ def change_password():
                     if not verifyPassword(password, user.password):
                         flash("Password Incorrect")
                     else:
-                        if password != newPassword:
-                            user.password = hashPassword(newPassword)
-                            commitDB()
-                            flash("Password changed!")
-                            return redirect(url_for("authentication.home"))
+                        print(password, newPassword, confirmPassword)
+                        if newPassword != confirmPassword:
+                            flash("Password and Confirm password doesn't match")
                         else:
-                            flash("Old Password and New Password cannot be same!")
+                            if password != newPassword:
+                                user.password = hashPassword(newPassword)
+                                commitDB()
+                                flash("Password changed!")
+                                return redirect(url_for("authentication.home"))
+                            else:
+                                flash("Old Password and New Password cannot be same!")
+    if user.is_superuser:
+        return render_template("admin/admin_change_password.html", user=user)
     return  render_template("change_password.html", user=user)
                     
 

@@ -9,12 +9,14 @@ from main.Payment.utils import deletePaymentWithNullBookingId
 from main.config import Config
 from .utils import *
 
-home = Blueprint("home",__name__,template_folder="templates")
+home = Blueprint("home",__name__,template_folder="templates", static_folder="static",static_url_path='/Home/static')
 
 @home.route("/")
 def index():
     # session.popitem()
     currentMovies = getRunningMovie()
+    for movie in currentMovies:
+        movie.banner_url = getImagePath(movie.banner_url)
     upcomingMovies = getUpcomingMovie()
 
     return render_template("index.html", currentMovies=currentMovies, upcomingMovies=upcomingMovies)
@@ -23,9 +25,11 @@ def index():
 def movie(id):
     movie = getMovieById(id)
     movieSchedule = getMovieSchedule(id)
+    # print(movieSchedule)
     if checkIfInputEmptyVAL(movie) or movie.status==MovieStatus.EXPIRED or isUpcomingMovie(id):
         return redirect(url_for("home.index"))
     movie.poster_url = getImagePath(movie.poster_url)
+    movie.banner_url = getImagePath(movie.banner_url)
     return render_template("movie.html", movie=movie, movieSchedule=movieSchedule)
 
 @home.route("/movieSeat/<int:id>")
@@ -34,6 +38,7 @@ def movieSeat(id):
     cleanLongHoldSeats()
     deletePaymentWithNullBookingId()
     seats = getSeats(id)
+    print(seats)
     if checkIfInputEmptyVAL(seats) or isUpcomingSchedule(id):
         return redirect(url_for("home.index"))
     highestRow = seats[0]['highest_rows']

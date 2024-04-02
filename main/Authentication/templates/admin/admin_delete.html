@@ -1,12 +1,15 @@
-{% extends 'admin/admin.html' %}
+{% extends "admin.html" %}
 
-{% block css %}
+{% block styles %}
+.profile-delete{
+    font-family:Poppins;
+}
 .form-container{
     background-color:white;
     color:black;
     display:flex;
     flex-direction:column;
-    align-items:center;
+    align-items:flex-start;
 }
 form input{
     width:100%;
@@ -30,14 +33,23 @@ form button{
 form button:hover{
     background-color:#333232;
 }
-{% endblock %}
+{%endblock%}
 
-{% block admin %}
-<div class="form-container">
-    <h1>Confirm delete, {{user.username}}?</h1>
-    <form action="{{url_for('authentication.delete')}}" method="post">
-        Confirm Password: <input type="password" name="password">
-        <button type="submit">Delete</button>
-    </form><br><br>
-</div>
+
+{%block subMenu%}
+<li><a href="{{url_for('authentication.update')}}">Update</a></li>
+<li><a href="{{url_for('authentication.change_password')}}">Change Password</a></li>
+<li><a href="{{url_for('authentication.delete')}}">Delete</a></li>
+{%endblock%}
+
+{%block content%}
+<section class="profile-delete">
+    <div class="form-container">
+        <h1>Confirm delete, {{user.username}}?</h1>
+        <form action="{{url_for('authentication.delete')}}" method="post">
+            Confirm Password: <input type="password" name="password">
+            <button type="submit">Delete</button>
+        </form><br><br>
+    </div>
+</section>
 {%endblock%}

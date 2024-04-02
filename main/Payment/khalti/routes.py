@@ -1,5 +1,5 @@
 import uuid
-from flask import flash, redirect, request, session, url_for
+from flask import flash, redirect, render_template, request, session, url_for
 from main.Authentication.utils import commitDB, login_required
 from main.Booking.models import BookingStatus
 from main.Payment.khalti.khalti import initkhalti, verifyPayment
@@ -49,10 +49,10 @@ def finalize_payment():
                 pay.bookingref.status = BookingStatus.RESERVED
                 commitDB()
         session.pop('booking', None)
+        # return render_template("payment_finalize.html")
         # ticket generation
         return redirect(url_for("ticket.index", tagid=tagId))
     else:
         for movie in info['movieInfo']:
             CreatePayment(info['userid'], None, movie['bookingid'],movie['price'],PaymentMethod.KHALTI,PaymentStatus.FAILURE)
         return redirect(url_for("payment.errorPage"))
-    return render_template("payment_finalize.html")

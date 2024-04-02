@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
-from flask import Blueprint, jsonify, render_template, request, url_for, redirect,flash
-from main.Authentication.utils import commitDB, deleteFromDB, saveToDB, login_required, login_not_required, superuser_required
+from flask import Blueprint, jsonify, render_template, request, session, url_for, redirect,flash
+from main.Authentication.utils import commitDB, deleteFromDB, getUserByUsername, saveToDB, login_required, login_not_required, superuser_required
 from main.Movie.models import Movie
 from main.Seats.models import SeatType
 
 from main.config import Config
 from .models import PriceStatus, Schedule
-from ..Movie.utils import getMovieById, getMovieList, checkIfInputEmptyVAL,emptyBoilerPlate, strDateTimeToPythonDateTime, strDateToPythonDate
+from ..Movie.utils import getImagePath, getMovieById, getMovieList, checkIfInputEmptyVAL,emptyBoilerPlate, strDateTimeToPythonDateTime, strDateToPythonDate
 from ..Screen.utils import generateUniqueNameFromName, getAllScreen, isNone
 from .utils import *
 
@@ -20,8 +20,12 @@ schedule = Blueprint("schedule", __name__, template_folder="templates")
 @login_required
 @superuser_required
 def list_schedules():
+    user = getUserByUsername(session['user'])
     runEvery5minutes()
     schedulesList = getAllMovieAndScreenInSchedule(expire=1)
+    print(schedulesList)
+    # if user.is_superuser:
+    #     return render_template("admin/list_schedule.html", schedulesList=schedulesList)
     return render_template("list_schedule.html", schedulesList=schedulesList)
 
 @schedule.route("/create/", methods=['GET','POST'])
@@ -29,13 +33,15 @@ def list_schedules():
 @superuser_required
 def create_schedule():
     runEvery5minutes()
+    user = getUserByUsername(session['user'])
     movies = getMovieList()
     screens = getAllScreen()
     prices = getPriceListOnlyId()
     newPrices=[]
     for key, value, status in prices:
         if status == PriceStatus.ENABLED:
-            newPrices.append({key, value})
+            newPrices.append([key, value])
+    print(newPrices)
     minTime = pythonDateTimeToHtml(datetime.now())
     temp = {}
     if request.method == "POST":
@@ -81,7 +87,8 @@ def create_schedule():
                 emptyBoilerPlate("Screen")
         else:
             emptyBoilerPlate("Movie")
-
+    # if user.is_superuser:
+    #     return render_template("admin/create_schedule.html", movies=movies, screens=screens, temp=temp, minTime=minTime,  prices=newPrices)
     return render_template("create_schedule.html", movies=movies, screens=screens, temp=temp, minTime=minTime, prices=newPrices)
 
 @schedule.route("/calculate-endtime/", methods=['POST'])
@@ -101,6 +108,7 @@ def calculate_endtime():
 @superuser_required
 def update_schedule(id):
     runEvery5minutes()
+    user = getUserByUsername(session['user'])
     schedule = getScheduleById(id)
     movies = getMovieList()
     screens = getAllScreen()
@@ -108,7 +116,7 @@ def update_schedule(id):
     newPrices=[]
     for key, value, status in prices:
         if status == PriceStatus.ENABLED:
-            newPrices.append({key, value})
+            newPrices.append([key, value])
     # minTime = pythonDateTimeToHtml(datetime.now())
     starttime = pythonDateTimeToHtml(schedule.start_time)
     endtime = pythonDateTimeToHtml(schedule.end_time)
@@ -166,7 +174,8 @@ def update_schedule(id):
                 emptyBoilerPlate("Screen")
         else:
             emptyBoilerPlate("Movie")
-
+    # if user.is_superuser:
+    #     return render_template("admin/edit_schedule.html", movies=movies, screens=screens, starttime=starttime, endtime=endtime,temp={}, schedule=schedule, prices=newPrices)
     return render_template("edit_schedule.html", movies=movies, screens=screens, starttime=starttime, endtime=endtime,temp={}, schedule=schedule, prices=newPrices)
 
 @schedule.route("/delete/<int:id>", methods=['GET', 'POST'])
@@ -174,15 +183,18 @@ def update_schedule(id):
 @superuser_required
 def delete_schedule(id):
     runEvery5minutes()
+    user = getUserByUsername(session['user'])
     schedule = getScheduleById(id=id)
     if not isNone(schedule):
+        schedule.movieref.poster_url = getImagePath(schedule.movieref.poster_url)
         if request.method == "POST":
             deleteFromDB(schedule)
             return redirect(url_for("schedule.list_schedules"))
     else:
         flash("No such schedule exists!")
         return redirect(url_for("schedule.list_schedules"))
-
+    # if user.is_superuser:
+    #     return render_template("admin/delete_schedule.html", schedule=schedule)
     return render_template("delete_schedule.html", schedule=schedule)
 
 
@@ -191,6 +203,9 @@ def delete_schedule(id):
 @superuser_required
 def list_price():
     prices = getPriceListWithSameId()
+    user = getUserByUsername(session['user'])
+    # if user.is_superuser:
+    #     return render_template("admin/prices/list_price.html", prices=prices)
     return render_template("prices/list_price.html", prices=prices)
 
 @schedule.route("/price/create", methods=['GET', 'POST'])
@@ -199,6 +214,7 @@ def list_price():
 def create_price():
     seatType = [(seat.name, seat.value) for seat in SeatType]
     priceStatus = [(price.name, price.value) for price in PriceStatus]
+    user = getUserByUsername(session['user'])
     if request.method == "POST":
         name = request.form.get("name")
         price_CLASSIC = request.form.get("price_CLASSIC")
@@ -246,11 +262,12 @@ def create_price():
                                 
                             
         return redirect(url_for("schedule.create_price"))
-
+    # if user.is_superuser:
+    #     return render_template("admin/prices/create_price.html", priceStatus=priceStatus, seatType=seatType)
     return render_template("prices/create_price.html", priceStatus=priceStatus, seatType=seatType)
 
 
-#TODO: Disabled currently make it later
+#TODO: Minor Bugs
 @schedule.route("/price/edit/<string:id>", methods=['GET',"POST"])
 @login_required
 @superuser_required
@@ -260,6 +277,7 @@ def edit_price(id):
     seatType = [(seat.name, seat.value) for seat in SeatType]
     priceStatus = [(p.name, p.value) for p in PriceStatus]
     currentUniqueName = price['uniqueid']
+    user = getUserByUsername(session['user'])
 
     if not checkIfInputEmptyVAL(price):
         if request.method == "POST":
@@ -331,6 +349,9 @@ def edit_price(id):
     else:
         flash("No such data found")
         return redirect(url_for("schedule.list_price"))
+    # if user.is_superuser:
+    #     return render_template("admin/prices/edit_price.html", price=price, seatType=seatType, priceStatus=priceStatus)
+
     return render_template("prices/edit_price.html", price=price, seatType=seatType, priceStatus=priceStatus)
 
 @schedule.route("/price/delete/<string:id>", methods=['GET',"POST"])
@@ -338,10 +359,13 @@ def edit_price(id):
 @superuser_required
 def delete_price(id):
     price = getPriceListWithSameId(id)[0]
+    user = getUserByUsername(session['user'])
     if request.method == "POST":
         price = getPriceListById(id)
         for p in price:
             deleteFromDB(p)
             print(p)
         return redirect(url_for("schedule.list_price"))
+    # if user.is_superuser:
+        # return render_template("admin/prices/delete_price.html", price=price)
     return render_template("prices/delete_price.html", price=price)

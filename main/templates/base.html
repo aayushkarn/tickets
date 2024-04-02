@@ -5,129 +5,75 @@
   <title>{% block title %}{% endblock %}ticket</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="icon" href="{{url_for('static', filename='favicon.ico')}}">
+  <script src="{{url_for('static',filename='js/sweetalert2@11.js')}}"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{url_for('static', filename="css/base.css")}}">
   <style>
-    body{
-      margin:0 16px;
-      padding:0;
-      background-color:#343434;
-      color:white;
-    }
-    @font-face{
-      font-family: main;
-      src: url("{{url_for('static', filename='fonts/main.ttf')}}");
-    }
-    @font-face{
-      font-family: poppins;
-      src: url("{{url_for('static', filename='fonts/poppins/Poppins-Regular.ttf')}}");
-    }
-    @font-face{
-      font-family: Roboto;
-      src: url("{{url_for('static', filename='fonts/roboto/Roboto-Regular.ttf')}}");
-    }
-    header{
-      position: sticky;
-      top:0;
-      z-index:10000;
-    }
-    .nav{
-      padding: 0px;
-      margin:0 20px;
-      display:flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: rgba(0,0,0,0.3);
-      height: auto;
-    }
-    .nav ul{
-      display: flex;
-      flex:1;
-      justify-content: space-evenly;
-      max-height: 100%;
-      align-items: center;
-    }
-    .nav ul li{
-      list-style-type: none;
-      font-size: 17px;
-      max-height: 100%;
-    }
-    .nav ul li a{
-      text-decoration: none;
-      color:white;
-    }
-    .title{
-      flex:2;
-    }
-    .brand{
-        font-family: 'main';
-        text-decoration:none;
-        font-size:30px;
-        color:white;
-        margin-left: 25px;
-    }
-    .error{
-      display: block;
-      margin: 0 20px 20px 20px;
-      background-color: rgba(21, 21, 21, 0.3);
-      font-size:15px;
-      font-family: poppins;
-      padding:5px;
-      border-radius: 5px;
-  }
-  .error span{
-      padding: 0 10px;
-      overflow: hidden; 
-  }
-  .error .x{
-      float: right;
-      padding: 0 7px; 
-      cursor: pointer;
-  }
     {%block styles%}{% endblock %}
   </style> 
+
   {%block head%}{%endblock%}
 </head>
 <body>
-    <header>
-      <div class="nav">
-        <div class="title">
-          <a href="#" class="brand">ticket</a>
-        </div>
-        <ul>
-          <li><a href="{{url_for("home.index")}}">Home</a></li>
-          {% if session['user'] %}
-            <li><a href="{{url_for("ticket.mytickets")}}">My Tickets</a></li>
-            <li><a href="{{url_for("authentication.profile")}}">Welcome,&nbsp;{{session['user']}}</a></li>
-            <li><a href="{{url_for("authentication.logout")}}">Logout</a></li>
-          {%else%}
-            <li><a href="{{url_for("authentication.login")}}">Login</a></li>
-          {%endif%}
+  <header>
+    <div class="navbar">
+        <a href="{{url_for("home.index")}}" class="navbar-brand">tickets</a>
+        <ul class="nav-items">
+            <li><a href="{{url_for("home.index")}}">Home</a></li>
+            {% if session['user'] %}
+              <li><a href="{{url_for("ticket.mytickets")}}">Tickets</a></li>
+              <li><a href="{{url_for("authentication.profile")}}">Welcome,&nbsp;{{session['user']}}</a></li>
+              <li><a href="{{url_for("authentication.logout")}}" class="login-btn">Logout</a></li>
+            {%else%}
+              <li><a href="{{url_for("authentication.login")}}" class="login-btn">Login</a></li>
+            {%endif%}
         </ul>
-      </div>
-    </header><br>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="error" id="error">
-                {% for msg in messages %}
-                  {% if loop.index <= 1 %}
-                    <span>{{msg}}</span>
-                  {% endif %}
-                {% endfor %}
-            <span class="x" id="x">X</span>
+    </div>
+    <div class="navbar-mobile-parent">
+        <div class="navbar-mobile">
+            <a href="{{url_for("home.index")}}" class="navbar-brand">tickets</a>
+            <div class="">
+                <a class="nav-toggle" id="nav-toggle">
+                    <i class="fa-solid fa-bars"></i>
+                </a>
+            </div>
         </div>
-        {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
-    
-    <script>
-    {% with messages = get_flashed_messages() %}
+        <div class="collapse-navbar" id="collapse-navbar">
+          <ul class="nav-items">
+            <li><a href="{{url_for("home.index")}}">Home</a></li>
+            {% if session['user'] %}
+              <li><a href="{{url_for("ticket.mytickets")}}">Tickets</a></li>
+              <li><a href="{{url_for("authentication.profile")}}">Welcome,&nbsp;{{session['user']}}</a></li>
+              <li><a href="{{url_for("authentication.logout")}}" class="login-btn">Logout</a></li>
+            {%else%}
+              <li><a href="{{url_for("authentication.login")}}" class="login-btn">Login</a></li>
+            {%endif%}
+        </ul>
+        </div>
+    </div>
+  </header> 
+  {% with messages = get_flashed_messages() %}
     {% if messages %}
-        var x = document.getElementById("x")
-        var error = document.getElementById("error")
-        x.addEventListener("click", (e)=>{
-            error.style.display = "none";
-        })
-    {%endif%}
-    {% endwith %}
-    </script>
+        {% for msg in messages %}
+            {% if loop.index <= 1 %}
+                <script type="text/javascript">
+                    console.log("{{msg}}");
+                    Swal.fire({
+                        title: "{{msg}}",
+                        width: 600,
+                        padding: "3em",
+                        color: "#fff",
+                        background: `rgba(0,0,0,0.5) url('{{url_for('static', filename='img/vivek.jpg')}}') no-repeat center center / contain`
+                    });
+                </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+    {% block content %}{% endblock %}
+    <footer>
+      <p class="footer">With ❤️ from <span class="brand">tickets</span></p>
+    </footer>
+    <script src="{{url_for('static', filename="js/script.js")}}"></script>
 </body>
 </html>

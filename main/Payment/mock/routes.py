@@ -25,7 +25,8 @@ def initiate_payment():
         commitDB()
     session.pop('booking', None)
 
-    
+    # return redirect(url_for("payment.redirectTicket", tagid=tagId))
+
     return redirect(url_for("ticket.index", tagid=tagId))
 
     

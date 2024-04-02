@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - tickets</title>
+    <script src="{{url_for('static',filename='js/sweetalert2@11.js')}}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/admin.css')}}">
+    <style>
+        {%block styles%}{%endblock%}
+    </style>
+    {%block head%}{%endblock%}
+</head>
+<body>
+
+    <section class="admin-dashboard-container">
+        <div class="container">
+            <div class="sidebar">
+                <a href="{{url_for('authentication.home')}}" class="navbar-brand">tickets</a>
+                <div class="sidebar-menu">
+                    <div class="section">
+                        <a href="{{url_for('authentication.profile')}}">Profile</a>
+                    </div>
+                    <div class="section">
+                        <a href="{{url_for('movie.movie_list')}}">Movie</a>
+                    </div>
+                    <div class="section">
+                        <a href="{{url_for('schedule.list_price')}}">Price</a>
+                    </div>
+                    <div class="section">
+                        <a href="{{url_for('screen.list_screen')}}">Screen</a>
+                    </div>
+                    <div class="section">
+                        <a href="{{url_for('schedule.list_schedules')}}">Schedule</a>
+                    </div>
+                    <div class="section">
+                        <a href="{{url_for('seats.create_seat')}}">Seats</a>
+                    </div>
+                    <div class="section">
+                        <a href="{{url_for('authentication.logout')}}">Logout</a>
+                    </div>
+                </div>
+                
+            </div>
+            <ul class="sub-menu">
+                <li><a href="{{url_for('authentication.home')}}">Home</a></li>
+                {% block subMenu%}
+                {%endblock%}
+            </ul>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for msg in messages %}
+                        {% if loop.index <= 1 %}
+                            <script type="text/javascript">
+                                console.log("{{msg}}");
+                                Swal.fire({
+                                    title: "{{msg}}",
+                                    width: 600,
+                                    padding: "3em",
+                                    color: "#fff",
+                                    background: `rgba(0,0,0,0.5) url('{{url_for('static', filename='img/vivek.jpg')}}') no-repeat center center / contain`
+                                });
+                            </script>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="content">
+                {%block content%}{%endblock%}
+            </div>
+        </div>
+    </section>
+
+    {%block scripts%}{%endblock%}
+</body>
+</html>

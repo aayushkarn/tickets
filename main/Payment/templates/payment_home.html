@@ -1,74 +1,46 @@
 {% extends "base.html" %} 
 
-{% block styles %}
-.container {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-}
-.payment-details {
-    width: 70%; /* Adjust the width as needed */
-    background-color:rgba(0,0,0,0.2);
-    padding:20px;
-}
-.payment-button-container {
-    width: 30%; /* Adjust the width as needed */
-    text-align: right; /* Align the button to the right */
-    background-color:rgba(0,0,0,0.4);
-    display:flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content:center;
-    align-items:center;
-}
-.payment-button-container form {
-    width: 80%;
-}
-.payment-button-container button {
-    width: 100%;
-}
-#khalti-payment-button{
-    background-color: #5C2D91;
-    font-size:20px;
-    cursor: pointer;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 2px;
-}
-#khalti-payment-button:hover{
-    background-color:#6d2db5;
-}
-#mock-payment-button{
-    background-color: #white;
-    font-size:20px;
-    cursor: pointer;
-    color: black;
-    border: 1px solid black;
-    padding: 5px 10px;
-    border-radius: 2px;
-}
-#mock-payment-button:hover{
-    background-color: green;
-    color:white;
-}
-.movieContainer{
-    display: flex;
-    flex-wrap: wrap;
-}
-.movieContainer > div {
-    flex: 1 1 calc(33.33% - 10px);
-    margin: 5px;
-}
-.movie{
-    border:1px solid white;
-    text-align:center;
-}
+{% block head %}
+    <link rel="stylesheet" href="{{url_for('payment.static', filename='css/payment_home.css')}}">
 {% endblock %}
-{%block head%}
 <!--<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>-->
-{%endblock%}
 {% block content%}
+
+<section class="payment-container">
+    <div class="movie-detail">
+        <p class="heading">{{movieInfo[0]['title']}}</p>
+        <div class="sub-heading">
+            <span class="movie-info">{{movieInfo[0]['screen']}} | {{movieInfo[0]['date']}} | {{movieInfo[0]['time']}} | {{movieInfo[0]['duration']}} min </span>
+        </div>
+    </div>
+    <div class="seat-info">
+        <table>
+            {% for m in movieInfo%}
+                <tr>
+                    <td>
+                        <span><b>Seat Id</b>: {{m['seat_id']}}</span>&nbsp;|&nbsp;
+                        <span><b>Seat Location</b>:</span>&nbsp;
+                            <span>Row: {{m['seat_row']}}</span>&nbsp;
+                            <span>Column: {{m['seat_column']}}</span>&nbsp;
+                        </div>
+                    </td>
+                </tr>
+        {%  endfor %}
+        </table>
+    </div>
+    <div class="price-container">
+        <p class="price">Total: Rs. <span id="totalprice">{{totalPrice}}</span></p>
+        <div class="payment-options">
+            <form action="{{url_for("payment.khalti.initiate_payment")}}" method="post">
+                <button type="submit" id="khalti-payment-button">Pay with Khalti</button>
+            </form>
+            <form action="{{url_for("payment.mock.initiate_payment")}}" method="post">
+                <button type="submit" id="mock-payment-button">Mock Pay</button>
+            </form>
+        </div>
+    </div>
+</section>
+<!--
 <div class="container">
     <div class="payment-details">
         <h2>Payment Details</h2>
@@ -103,5 +75,5 @@
         </form>
     </div>
 </div>
-
+-->
 {% endblock %}

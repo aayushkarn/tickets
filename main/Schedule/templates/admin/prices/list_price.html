@@ -1,0 +1,96 @@
+{% extends 'admin.html' %}
+
+{% block css %}
+.form-container {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px; 
+    width: 80%; 
+    margin: auto;
+}
+.form-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0px;
+    font-family: Arial, sans-serif;
+}
+
+.form-container th {
+    background-color: #444;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+}
+
+.form-container tr {
+    background-color: #eee;
+}
+
+.form-container td, th {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.form-container .expired {
+    background-color: #f44336;
+    color: white;
+}
+
+.form-container a {
+    text-decoration: none;
+    padding:10px;
+    color: #555;
+}
+
+.form-container a:hover {
+    color: white;
+    background-color: #555;
+}
+{% endblock %}
+
+{% block admin %}
+    <div class="form-container">
+        <h1>Price List</h1>
+        {% if prices %}
+        <table style="width:100%;"><br>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th colspan=3>Price</th>
+                    <th>Status</th>
+                    <th colspan=2>Actions</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>CLASSIC</th>
+                    <th>BUSINESS</th>
+                    <th>EXECUTIVE</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for price in prices %}
+                <tr> 
+                    <td>{{price.name}}</td>
+                    <td>{{price.CLASSIC}}</td>
+                    <td>{{price.BUSINESS}}</td>
+                    <td>{{price.EXCLUSIVE}}</td>
+                    <td>{{price.status}}</td>
+                    <td><a href="{{url_for("schedule.edit_price", id=price.uniqueid)}}">Edit</a></td>
+                    <td><a href="{{url_for("schedule.delete_price", id=price.uniqueid)}}">Delete</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <br><br>
+        No prices yet. Goto "Add" to create price group.
+        {% endif %}
+    </div>
+{%endblock%}

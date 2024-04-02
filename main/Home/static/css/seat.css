@@ -1,0 +1,239 @@
+.seats-section{
+    padding:70px;
+    height: 100vh;
+}
+
+.seats-section .movie-detail .heading{
+    font-size: 1.7rem;
+    font-family: Poppins;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.seats-section .movie-detail .sub-heading{
+    color:#464444;
+    font-family: Arial;
+    font-size:13px;
+}
+
+.seats-section .movie-detail .movie-info{
+    display: inline-block; 
+    border-bottom: 2px dotted #387462; 
+    padding-bottom: 2px;
+    padding-right: 10px;
+}   
+
+.seats-section .movie-detail .seat-color-code{
+    height: 100%;
+    padding: 10px 0;
+}
+
+.seats-section .movie-detail .seat-color-code span{
+    margin:0 10px 0 0;
+    /* background-color: red; */
+}
+.seats-section .movie-detail .seat-color-code span::before{
+    content: "";
+    height: 10px;
+    width: 10px;
+    margin-right:5px;
+    /* background-color: #464444; */
+    border:1px solid #333;
+    display: inline-block;
+}
+
+.seats-section .movie-detail .seat-color-code .unreserved::before{
+    background-color: white;
+}
+
+.seats-section .movie-detail .seat-color-code .reserved::before{
+    background-color: rgb(214, 59, 59);
+}
+
+.seats-section .movie-detail .seat-color-code .booked::before{
+    background-color: rgb(239, 255, 17);
+}
+
+.seats-section .movie-detail .seat-color-code .selected::before{
+    background-color: #387462;
+}
+
+.seats-container{
+    display: flex;
+    flex-direction: row;
+}
+
+.seats-container .seats{
+    width:90%;
+    max-height: 428px;
+
+    overflow: auto;
+    scrollbar-width: thin;
+}
+
+.seats-container table{
+    width: 100%;
+    table-layout: fixed;
+    /* overflow: auto; */
+}
+
+.seats-container table caption{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:30px 0;
+}
+
+.seats-container .screen{
+    /* width:100%; */
+    transform: rotate(180deg);
+    transform-origin: center center; 
+    height:40px;
+    width: 240px;
+}
+
+.seats-container tr{
+    display: flex;
+    justify-content: center;
+}
+.seat {
+    width: 45px;
+    height: 45px;
+    border: 1px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    cursor:pointer;
+    border:1px solid #333;
+}
+
+.seat.CLASSIC::after{
+    content:"C"
+}
+
+.seat.BUSINESS::after{
+    content:"B"
+}
+
+.seat.EXCLUSIVE::after{
+    content:"E"
+}
+
+.seat.GAP {
+    visibility: hidden;
+}
+.seat.RESERVED{
+    background-color:rgb(214, 59, 59);
+    color:white;
+}
+.seat.BOOKED, .seat.HOLD{
+    background-color: rgb(239, 255, 17);
+}
+.seat.selected{
+    background-color: #387462;
+    color:white;
+}
+
+.price-container{
+    font-family: Poppins;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.price-container .price{
+    font-weight:200;
+    font-size: 1.6rem;
+    margin-bottom:50px;
+    text-align: center;
+}
+
+.price-container span{
+    font-weight:600!important;
+}
+
+.price-container a{
+    margin-top:20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color:white;
+    font-size: 1.5rem;
+    background-color: #387462;
+    padding:4px 35px;
+    border-radius: 1px;
+    font-family: Oswald;
+}
+
+.price-container a:hover{
+    color:white;
+    background-color: #000;
+    cursor:pointer;
+}
+
+
+
+@media screen and (max-width:600px) {
+    .seats-section{
+        padding:60px;
+    }
+    .seats-section .movie-detail{
+        text-align: center;
+    }
+    .seats-section .movie-detail .heading{
+        font-size: 1.5rem;
+    }
+    
+    .seats-section .movie-detail .sub-heading{
+        font-size:12px;
+    }
+    .seats-section .movie-detail .seat-color-code span{
+        margin:0 7px 0 0;
+    }
+
+    .seats-container{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .seats-container table caption{
+        margin:10px 0;
+    }
+    
+    .seats-container .seats{
+        width:100%;
+        max-height: 200px;
+    }
+
+    .seats-container .screen{
+        height:20px;
+        width: 120px;
+    }
+    
+    .seat {
+        width: 28px;
+        height: 28px;
+    }
+    .price-container{
+        margin-top:10px;
+    }
+    .price-container .price{
+        font-size: 1.2rem;
+        margin-bottom:0px;
+    }
+    
+    
+    .price-container a{
+        font-size: 1.3rem;
+        padding:4px 80px;
+    }
+    
+    .price-container a:hover{
+        color:white;
+        background-color: #000;
+        cursor:pointer;
+    }
+    
+}

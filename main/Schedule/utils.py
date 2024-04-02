@@ -95,10 +95,12 @@ def getPriceListOnlyId():
 
 
 def getPriceListById(id):
+    print(id)
+    print(Price.query.filter_by(uniqueid=id).all())
     return Price.query.filter_by(uniqueid=id).all()
 
 def getUniqueId(onlyid=None):
-    if onlyid:
+    if onlyid is not None:
         unique = getPriceListById(onlyid)
         if unique:
             return [unique[0].uniqueid]
@@ -109,7 +111,7 @@ def getUniqueId(onlyid=None):
 
 # TODO: fix for single id request. Currently using list[0]
 def getPriceListWithSameId(onlyid=None):
-    if onlyid:
+    if onlyid is not None:
         uniqueidArr = getUniqueId(onlyid)
     else:
         uniqueidArr = getUniqueId()

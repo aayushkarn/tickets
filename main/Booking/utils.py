@@ -29,7 +29,7 @@ def getSeats(scheduleid):
     priceid = schedule.price
     prices = getPriceListWithSameId(priceid)
     booking = getBookingList(scheduleid)
-    # print(prices)
+    print(prices)
     if prices[0]['status'] == PriceStatus.DISABLED.value:
         return []
     seatPrice = []

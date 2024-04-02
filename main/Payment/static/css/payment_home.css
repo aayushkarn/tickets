@@ -1,0 +1,138 @@
+.payment-container{
+    padding:70px;
+    height: 100vh;
+    font-family: Poppins;
+}
+.payment-container .movie-detail .heading{
+    font-size: 1.7rem;
+    font-family: Poppins;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.payment-container .movie-detail .sub-heading{
+    color:#464444;
+    font-family: Arial;
+    font-size:13px;
+}
+
+.payment-container .movie-detail .movie-info{
+    display: inline-block; 
+    border-bottom: 2px dotted #387462; 
+    padding-bottom: 2px;
+    padding-right: 10px;
+} 
+
+.payment-container .seat-info{
+    margin-top:20px;
+    width: 100%;
+    overflow: auto;
+    height: 60%;
+}
+
+.payment-container table{
+    width:100%;
+    text-align: center;
+    word-wrap: break-word;
+    /* table-layout: fixed; */
+    /* overflow: auto; */
+}
+.payment-container tr{
+    background-color: #ddd;
+    margin:15px 0;
+}
+
+
+
+.price-container{
+    font-family: Poppins;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.price-container .price{
+    font-weight:200;
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+.price-container span{
+    font-weight:600!important;
+}
+
+.price-container a{
+    margin-top:20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color:white;
+    font-size: 1.5rem;
+    background-color: #387462;
+    padding:4px 35px;
+    border-radius: 1px;
+    font-family: Oswald;
+}
+
+.payment-options {
+    width: 50%; 
+    display:flex;
+    flex-direction: column;
+    gap: 6px;
+    justify-content:center;
+    align-items:center;
+}
+.payment-options form {
+    width: 90%;
+}
+.payment-options button {
+    width: 100%;
+}
+#khalti-payment-button{
+    background-color: #5C2D91;
+    font-size:20px;
+    cursor: pointer;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 2px;
+}
+#khalti-payment-button:hover{
+    background-color:#6d2db5;
+}
+#mock-payment-button{
+    background-color: white;
+    font-size:20px;
+    cursor: pointer;
+    color: black;
+    border: 1px solid black;
+    padding: 5px 10px;
+    border-radius: 2px;
+}
+#mock-payment-button:hover{
+    background-color: green;
+    color:white;
+}
+
+@media screen and (max-width:600px) {
+    .payment-container .seat-info{
+        height: 40%;
+    }
+    .price-container .price{
+        font-size: 1.3rem;
+    }
+    .payment-container{
+        height: 120vh;
+    }
+    .payment-options{
+        width: 100%;
+    }
+    .payment-options form {
+        width: 100%;
+    }
+    #khalti-payment-button{
+        font-size:15px;
+    }
+    #mock-payment-button{
+        font-size:15px;
+    }
+}

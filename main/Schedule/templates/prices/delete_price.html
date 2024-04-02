@@ -1,18 +1,67 @@
-<style>
-    img{
-        width:100%%;
-        height:300px; 
-    }
-</style>
+{% extends "admin.html" %}
 
-<h1>Delete Price</h1>
+{% block styles %}
+.price-delete-container{
+    font-family:Poppins;
+}
+.form-container {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px; 
+    width: 80%; 
+    margin: auto;
+}
 
-<form action={{url_for("schedule.delete_price", id=price.uniqueid)}} method="POST">
+form {
+    width: 100%; 
+}
 
-    <h3>Delete <i>{{price.name}}</i>?</h3><br><br>
-    <button type="submit">Delete</button>
-    <a href="{{url_for("schedule.list_price")}}">Cancel</a>
-</form>
+form input{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+img{
+    width:100%%;
+    height:300px; 
+}
 
-<br>
-<br>
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #e36868;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+form button:hover {
+    background-color: #944e4e;
+}
+{%endblock%}
+
+
+{%block subMenu%}
+<li><a href="{{url_for('schedule.create_price')}}">Create</a></li>
+{%endblock%}
+
+{%block content%}
+<section class="price-delete-container">
+    <div class="form-container">
+        <form action={{url_for("schedule.delete_price", id=price.uniqueid)}} method="POST">
+
+            <h3>Delete <i>{{price.name}}</i> ?</h3><br><br>
+            <button type="submit">Delete</button>
+            <a class="cancel" href="{{url_for("schedule.list_price")}}">Cancel</a>
+        </form>
+    </div>
+</section>
+{%endblock%} 

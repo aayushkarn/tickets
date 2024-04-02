@@ -35,13 +35,13 @@ def create_seat():
                         newSeat = Seats(row=row, column=column, type=type, screen=screen)
                         saveToDB(newSeat)
                         storeGapWhereNoSeats(screen)
-                        flash("Saved")
+                        # flash("Saved")
                         return redirect(url_for("seats.create_seat"))
                     elif checkIfSeatExistsAndIsGap(row, column, screen, type=type):
                         updateSeatType = getAllSeats(row, column, screen)
                         updateSeatType.type = type
                         commitDB()
-                        flash("Saved")
+                        # flash("Saved")
                         return redirect(url_for("seats.create_seat"))
                     else:
                         flash("Seat already exists")

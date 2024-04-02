@@ -1,48 +1,100 @@
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for msg in messages %}
-            <li>{{msg}}</li>
-        
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
-<h1>Non functional use it later</h1>
-<h1>Edit Price</h1>
-<form action={{url_for("schedule.edit_price",id=price.uniqueid)}} method="POST">
+{% extends "admin.html" %}
 
-    Name
-    <input type="name" name="name" value={{price.name}}>
-    <br><br>
+{% block styles %}
+.price-edit-container{
+    font-family:Poppins;
+}
 
-    Seats
-    <div style="border:1px solid black; display:table-caption;
-    padding:10px">
-    {% for key, value in seatType %}
-        {% if key != "GAP" %}
-            {{key}} Price <input type="number" step="0.1" name="price_{{key}}" 
-                value="{{price.get(key)}}"
-            >
+.form-container {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px; 
+    width: 80%; 
+    margin: auto;
+}
+
+form {
+    width: 100%; 
+}
+
+form input,
+form select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #242424;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+
+form button:hover {
+    background-color: #333232;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.2em;
+    color: #333232;
+    font-weight: lighter;
+}  background-color: #944e4e;
+
+{%endblock%}
+
+
+{%block subMenu%}
+<li><a href="{{url_for('schedule.create_price')}}">Create</a></li>
+{%endblock%}
+
+{%block content%}
+<section class="price-edit-container">
+    <div class="form-container">
+        <h1>Edit Price</h1>
+        <form action={{url_for("schedule.edit_price",id=price.uniqueid)}} method="POST">
+    
+            Name
+            <input type="name" name="name" value={{price.name}}>
             <br><br>
-        {% endif %}
-    {% endfor %}
-    </div><br>
-    Status
-    <select name="status">
-    {% for name, value in priceStatus %}
-        <option value="{{name}}"
-            {% if name == price.status %}
-                selected
-            {% endif %}
-        >{{name}}</option>
-    {% endfor %}
-    </select>
-    <br><br>
-    <button type="submit">Submit</button>
-</form>
-
-<br><br>
-
-<a href="{{url_for("schedule.list_price")}}">List</a><br>
+    
+            Seats
+            <div class="seats">
+            {% for key, value in seatType %}
+                {% if key != "GAP" %}
+                    {{key}} Price <input type="number" step="0.1" name="price_{{key}}" 
+                        value="{{price.get(key)}}"
+                    >
+                    <br><br>
+                {% endif %}
+            {% endfor %}
+            </div><br>
+            Status
+            <select name="status">
+            {% for name, value in priceStatus %}
+                <option value="{{name}}"
+                    {% if name == price.status %}
+                        selected
+                    {% endif %}
+                >{{name}}</option>
+            {% endfor %}
+            </select>
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</section>
+{%endblock%}
 

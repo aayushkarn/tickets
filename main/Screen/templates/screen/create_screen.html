@@ -1,35 +1,62 @@
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for msg in messages %}
-            <li>{{msg}}</li>
-        
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
+{% extends "admin.html" %}
 
-<h1>Create Screen</h1>
-<form action={{url_for("screen.create_screen")}} method="POST">
+{% block styles %}
+.screen-create-container{
+    font-family:Poppins;
+}
+h1{
+    margin-bottom:20px;
+}
+form {
+    width: 100%; 
+}
 
-    Name <input type="name" name="name">
-    <button type="submit">Submit</button>
-</form>
+form input{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
 
-<br><br>
-<table style="margin:10px;">
-{% for screen in screens%}
-    <tr><td>{{screen.name}}<td>
-        <td>
-            <a href="{{url_for('screen.edit_screen', id=screen.id)}}" method="post">
-                Edit
-            </a>
-        <td>
-        <td>
-            <a href="{{url_for('screen.delete_screen', id=screen.id)}}">
-                Delete
-            </a>
-        </td>
-    </tr>
-{% endfor %}
-</table>
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #242424;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+
+form button:hover {
+    background-color: #333232;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.2em;
+    color: #333232;
+    font-weight: 300;
+}
+{%endblock%}
+
+{%block subMenu%}
+<li><a href="{{url_for('schedule.create_price')}}">Create</a></li>
+{%endblock%}
+
+{%block content%}
+<section class="screen-create-container">
+    <h1>Create Screen</h1>
+    <form action={{url_for("screen.create_screen")}} method="POST">
+
+        <label>Name<label> <input type="name" name="name">
+        <button type="submit">Submit</button>
+    </form>
+
+    <br><br>
+</section>
+{%endblock%} 

@@ -2,32 +2,76 @@
 
 {% block styles %}
 .container{
-    margin:20px;
+    padding:70px;
+    margin:0 20px;
+    font-family:Poppins;
+    height:120vh;
+}
+.form-container{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:center;
+}
+
+form{
+    width:90%;
+}
+form input{
+    width:100%;
+    box-sizing:border-box;
+    padding:10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+label{
+    display:block;
+    margin-bottom:0.2em;
+    color:#333232;
+    font-weight:300;
+}
+form button{
+    width:100%;
+    padding:10px;
+    background-color: #242424;
+    color: white;
+    font-size:16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+form button:hover{
+    background-color:#333232;
+}
+
+@media screen and (max-width:600px){
+    *{
+        font-size:13px;
+    }
+    .container{
+        padding:70px 10px 10px 10px;
+    }
+    form{
+        width:100%;
+    }
+
 }
 {% endblock %}
 
 {% block content %}
 
-<div clas="container">
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for msg in messages %}
-            <li>{{msg}}</li>
-        
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
-<h1>Confirm delete, {{user.username}}?</h1>
-<form action="{{url_for('authentication.delete')}}" method="post">
-    Confirm Password: <input type="password" name="password">
-    <button type="submit">Delete</button>
-</form>
+<div class="container">
+    
+    <h1>Confirm delete, {{user.username}}?</h1>
+    <a href="{{url_for('authentication.profile')}}"> < Back</a><br>
+    <div class="form-container">
+        <form action="{{url_for('authentication.delete')}}" method="post">
+            <label>Confirm Password:</label> <input type="password" name="password">
+            <button type="submit">Delete</button>
+        </form>
+    </div>
 
-<a href="{{url_for('authentication.logout')}}">Logout</a><br>
-<a href="{{url_for('authentication.update')}}">Update</a><br>
-<a href="{{url_for('authentication.change_password')}}">Change Password</a><br>
-<a href="{{url_for('authentication.profile')}}">Profile</a><br>
 </div>
 {% endblock %}

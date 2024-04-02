@@ -1,19 +1,47 @@
-<style>
-    img{
-        width:100%%;
-        height:300px; 
-    }
-</style>
+{% extends "admin.html" %}
 
-<h1>Delete Movie</h1>
+{% block styles %}
+.movie-delete-container{
+    font-family:Poppins;
+}
+img{
+    width:100%%;
+    height:300px; 
+}
+form {
 
-<form action={{url_for("movie.delete_movie", id=movie.id)}} method="POST">
+}
 
-    <img src={{url_for('static', filename=movie.poster_url)}}>
-    <h3>Delete <i>{{movie.title}}</i>?</h3>
-    <button type="submit">Delete</button>
-    <a href="{{url_for("movie.movie_list")}}">Cancel</a>
-</form>
+form button {
+   
+    padding: 10px;
+    background-color: #242424;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+{%endblock%}
 
-<br>
-<br>
+
+{%block subMenu%}
+<li><a href="{{url_for('movie.create_movie')}}">Create Movie</a></li>
+{%endblock%}
+
+{%block content%}
+<section class="movie-delete-container">
+    <h1>Delete Movie</h1>
+    <form action={{url_for("movie.delete_movie", id=movie.id)}} method="POST">
+
+        <img src={{url_for('static', filename=movie.poster_url)}}>
+        <h3>Delete <i>{{movie.title}}</i>?</h3>
+        <button type="submit">Delete</button><br>
+        <a href="{{url_for("movie.movie_list")}}">Cancel</a>
+    </form>
+
+    <br>
+    <br>
+</section>
+{%endblock%}

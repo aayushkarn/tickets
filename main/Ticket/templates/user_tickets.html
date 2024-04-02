@@ -1,33 +1,37 @@
 {% extends 'base.html' %}
 
-{% block styles %} 
-.container{
-    margin:20px;
-}
-.ticket {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
+{% block head %} 
+<link rel="stylesheet" href="{{url_for('ticket.static', filename='css/ticket.css')}}">   
 {% endblock %}
 {% block content %}
-<div class="container">
+
+<section class="ticket-container">
     <h1>Your Tickets</h1>
     {% if tickets %}
-        {% for ticket in tickets %}
-        <div class="ticket">
-            <div class="ticket">
-                <h4>{{ ticket.scheduleref.movieref.title }}</h4>
-                <span>{{ ticket.scheduleref.start_time.date() }}</span> | 
-                <span>{{ ticket.scheduleref.start_time.time() }}</span>
-                <p>Status: {{ ticket.ticket_status }}</p>
-            </div>
-        </div>
-        {% endfor %}
+    <div class="ticket">
+        <table class="ticket">
+            <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.scheduleref.movieref.title }}</td>
+                    <td>{{ ticket.scheduleref.start_time.date() }}</td>
+                    <td>{{ ticket.scheduleref.start_time.time() }}</td>
+                    <td>{{ ticket.ticket_status.value }}</td>
+                    <td><a href="{{url_for('ticket.index', tagid=ticket.tagid)}}" class="view">View</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
     {% else %}
         <h3><i>You have not booked any tickets yet!</i></h3>
     {% endif %}
-</div>
+</section>
+
     
 {% endblock %}

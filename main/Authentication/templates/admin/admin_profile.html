@@ -1,54 +1,32 @@
-{% extends 'admin/admin.html' %}
+{% extends "admin.html" %}
 
-{% block css %}
-.profile-container{
-    width:100%;
-    background-color: #444;
-    height:70vh;
-}
-.profile-container h2{
-    padding:20px;
-    font-family: Roboto;
-}
-.profile-container p{
-    padding: 0 20px;
-    margin-bottom:10px;
-    font-size: 15px;
-    font-weight: 500;
-}
-.profile-container p span{
-    font-style: italic;
-    font-weight: 300;
-}
-.profile-container .buttons{
+{% block styles %}
+.profile{
+    height:50%;
+    font-family: Arial;
+    font-size:1.8rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
-.profile-container a{
-    width: fit-content;
-    text-decoration: none;
-    color:white;
-    margin: 5px 0;
-    padding: 5px 10px;
-}
-.profile-container a:hover{
-    background-color: #555;
-    color:#fff;
-}
-{% endblock %}
 
-{% block admin %}
-    <div class="profile-container">
-        <h2>Welcome, {{user.name}}</h2>
+.profile span{
+    font-weight: 600;
+}
+{%endblock%}
 
-        <p>Username: <span>{{user.username}}</span></p>
-        <p>Email: <span>{{user.email}}</span></p>
-        <p>Created at: <span>{{user.created_at}}</span></p>
-        <p>Updated at: <span>{{user.updated_at}}</span></p>
-        <!--<div class="buttons">
-            <a href="{{url_for('authentication.change_password')}}">Change Password</a>
-            <a href="{{url_for('authentication.delete')}}">Delete</a>
-        </div>-->
-    </div>
+{%block subMenu%}
+<li><a href="{{url_for('authentication.update')}}">Update</a></li>
+<li><a href="{{url_for('authentication.change_password')}}">Change Password</a></li>
+<li><a href="{{url_for('authentication.delete')}}">Delete</a></li>
+{%endblock%}
+
+{%block content%}
+<section class="profile">         
+    <p>Username: <span>{{user.username}}</span></p>
+    <p>Email: <span>{{user.email}}</span></p>
+    <p>Created at: <span>{{user.created_at}}</span></p>
+    <p>Updated at: <span>{{user.updated_at}}</span></p>
+</section>
 {%endblock%}

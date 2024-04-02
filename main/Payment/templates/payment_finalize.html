@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+    .content{
+        font-family:Poppins;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+{% endblock %}
+
+{% block content %}
+<section class="content">
+   <h1>Payment Confirmed</h1><br>
+   <a href="{{url_for('home.index')}}">Goto Home</a><br>
+   <span>If you are not redirected you can find your ticket in tickets section</span>
+</section>
+{% endblock %}
+
+{% block head%}
+<script>
+    setTimeout(function(){
+        window.location.href = '{{ redirect_url }}';
+    }, 5000); // 5000 milliseconds = 5 seconds
+</script>
+{%endblock%}

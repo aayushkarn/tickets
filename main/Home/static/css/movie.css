@@ -1,0 +1,151 @@
+.movie-detail-container{
+    padding:70px 70px;
+    display: flex;
+    flex-direction: row;
+    /* background: rgba(0,0,0,0.9); */
+    /* background-image: linear-gradient(to right, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0) 100%), url('../img/oppenheimer.jpg'); */
+    background-position: center;
+    background-size: cover;
+}
+
+.movie-detail-container img{
+    height:300px;
+    width:200px;
+    object-fit: cover;
+    margin:10px 0 0 0;
+}
+
+.movie-detail-container .movie-info{
+    color:white;
+    margin:10px 20px 0 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.movie-detail-container .movie-info h1{
+    font-family: Poppins;
+    font-size:1.7rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    /* background-color: rgba(0,0,0,0.7); */
+    /* padding:5px; */
+}
+
+.movie-detail-container .movie-info p{
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 10px;
+}
+
+.movie-detail-container .movie-info a{
+    text-decoration: none;
+    color: white;
+    font-family: Poppins;
+    border:1px solid #848488;
+    padding:9px 18px;
+}
+
+.movie-detail-container .movie-info a:hover{
+    background-color: white;
+    color:#000;
+}
+
+
+.schedules{
+    padding:20px 70px;
+}
+
+.schedules .schedule-brand{
+    font-family: Poppins;
+    font-size: 1.7rem;
+    text-transform: uppercase;
+}
+
+.schedules .movie-schedule{
+    margin:30px 0;
+    border: 1px solid #3333333d;
+}
+
+.schedules .dateHead{
+    font-family: Arial;
+    text-align: center;
+    background-color: #387462;
+    color:white;
+    padding:5px;
+    font-family: 1.5rem;
+}
+
+.schedules ul{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-gap:20px;
+}
+
+.schedules ul li{
+    font-family: Poppins;
+    display: inline-block;
+    margin:20px;
+    padding:30px;
+    text-align: center;
+    list-style: none;
+    background-color: #387462;
+    border-radius: 3px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.schedules ul li a{
+    text-decoration: none;
+    color:white;
+}
+
+.schedules ul li:hover{
+    transform: scale(1.05);
+    background-color: #000;
+}
+.no-schedule{
+    height:50px;
+    width: 100%;
+    font-family: Poppins;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+}
+
+
+
+@media screen and (max-width:600px) {
+    .movie-detail-container{
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .movie-detail-container img{
+        height:350px;
+        width:250px;
+    }
+    
+    .movie-detail-container .movie-info{
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .movie-detail-container .movie-info .description{
+        text-align: center;
+    }
+
+    .movie-detail-container .movie-info h1{
+        font-size:1.5rem;
+        margin-bottom: 14px;
+    }
+
+
+    .schedules{
+        padding:20px 20px;
+    }
+
+    .schedules .schedule-brand{
+        text-align: center;
+    }
+    
+}

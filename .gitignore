@@ -1,9 +1,12 @@
 *.sqlite3
 __pycache__/
 .env
-static/*
 *.jpeg
 *.jpg
+*.png
+*.pdf
 .venv/
 *.txt
 !requirements.txt
+!static/img/screen.png
+!static/img/vivek.jpg

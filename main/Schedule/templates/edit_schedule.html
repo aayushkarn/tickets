@@ -1,95 +1,158 @@
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul>
-        {% for msg in messages %}
-            <li>{{msg}}</li>
-        
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
+{% extends "admin.html" %}
 
-<h1>Update Show</h1>
-<form action={{url_for("schedule.update_schedule",id=schedule.id)}} method="POST">
+{% block styles %}
+.schedule-edit-container{
+    font-family:Poppins;
+}
+.form-container {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px; 
+    width: 80%; 
+    margin: auto;
+}
 
-    Movie
-    {% if movies %}
-        <select name="movie" id="movie">
-            {% for movie in movies %}
-            <option value="{{movie.id}}" 
-                {% if temp.movie %}
-                    {% if temp.movie|int == movie.id %}
+form {
+    width: 100%; 
+}
+
+form input,
+form select,
+form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form textarea {
+    resize: none;
+}
+
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #242424;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+
+form button:hover {
+    background-color: #333232;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.2em;
+    color: #333232;
+    font-weight: lighter;
+}
+
+form img {
+    width: 100px;
+    height: 100px;
+    object-fit: fit-content; 
+    margin-bottom: 20px;
+}
+{%endblock%}
+
+
+{%block subMenu%}
+<li><a href="{{url_for('schedule.create_schedule')}}">Create</a></li>
+{%endblock%}
+
+{%block content%}
+<section class="schedule-edit-container">
+    <h1>Update Show</h1>
+    <form action={{url_for("schedule.update_schedule",id=schedule.id)}} method="POST">
+
+        Movie
+        {% if movies %}
+            <select name="movie" id="movie">
+                {% for movie in movies %}
+                <option value="{{movie.id}}" 
+                    {% if temp.movie %}
+                        {% if temp.movie|int == movie.id %}
+                            selected 
+                        {% endif %}
+                    {% else %}
+                        {% if movie.id == schedule.movie %}
+                        selected
+                        {% endif %}
+                    {% endif %}
+                >{{movie.title}}</option>
+                {% endfor %}
+            </select><br><br>
+        {% else %}
+            <br><br>
+            You haven't created any movies. <a href="{{url_for("movie.create_movie")}}">Create here</a><br><br>
+        {% endif %}
+
+        Screen
+        {% if screens %}
+            <select name="screen">
+                {% for screen in screens %}
+                <option value="{{screen.id}}"
+                {% if temp.screen %}
+                    {% if temp.screen|int == screen.id %}
                         selected 
                     {% endif %}
                 {% else %}
-                    {% if movie.id == schedule.movie %}
-                    selected
-                    {% endif %}
+                    {% if screen.id == schedule.screen %}
+                        selected 
+                    {% endif %}   
                 {% endif %}
-            >{{movie.title}}</option>
-            {% endfor %}
-        </select><br><br>
-    {% else %}
-        <br><br>
-        You haven't created any movies. <a href="{{url_for("movie.create_movie")}}">Create here</a><br><br>
-    {% endif %}
+                >{{screen.name}}</option>
+                {% endfor %}
+            </select><br><br>
+        {% else %}
+            <br><br>
+            You haven't created any screens. <a href="{{url_for("screen.create_screen")}}">Create here</a><br><br>
+        {% endif %}
 
-    Screen
-    {% if screens %}
-        <select name="screen">
-            {% for screen in screens %}
-            <option value="{{screen.id}}"
-            {% if temp.screen %}
-                {% if temp.screen|int == screen.id %}
-                    selected 
-                {% endif %}
-            {% else %}
-                 {% if screen.id == schedule.screen %}
-                    selected 
-                {% endif %}   
-            {% endif %}
-            >{{screen.name}}</option>
-            {% endfor %}
-        </select><br><br>
-    {% else %}
-        <br><br>
-        You haven't created any screens. <a href="{{url_for("screen.create_screen")}}">Create here</a><br><br>
-    {% endif %}
-
-    Price
-    {% if prices %}
-        <select name="price">
-            {% for name, uniqueid in prices %}
-                <option value="{{uniqueid}}"
-                    {% if temp.price %}
-                        {%if temp.price == uniqueid %}
-                            selected
-                        {% endif %}
+        Price
+        {% if prices %}
+            <select name="price">
+                {% for price in prices %}
+                    <option value="{{price[0]}}"
+                        {% if temp.price %}
+                            {%if temp.price == price[0] %}
+                                selected
+                            {% endif %}
                         {% else %}
-                        {% if uniqueid == schedule.price%}
-                            selected
+                            {% if uniqueid == schedule.price%}
+                                selected
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                >{{name}}</option>
-            {% endfor %}
-        </select><br><br>
-    {% else %}<br>
-        You haven't created any price so create it before movie forward <a href="{{url_for("schedule.create_price")}}">Create here</a><br><br>
-    {% endif %}
+                    >{{price[1]}}</option>
+                {% endfor %}
+            </select><br><br>
+        {% else %}<br>
+            You haven't created any price so create it before movie forward <a href="{{url_for("schedule.create_price")}}">Create here</a><br><br>
+        {% endif %}
 
-    Start Time 
-    <input type="datetime-local" name="starttime" id="starttime" value="{{starttime}}" min={{minTime}}><br><br>
-    <i>Endtime gets auto updated on start time change with addition of movie duration</i><br><br>
-    End Time 
-    <input type="datetime-local" name="endtime" id="endtime" value="{{endtime}}"><br><br>
-    <button type="submit">Update</button>
-</form>
+        Start Time 
+        <input type="datetime-local" name="starttime" id="starttime" value="{{starttime}}" min={{minTime}}><br><br>
+        <i>Endtime gets auto updated on start time change with addition of movie duration</i><br><br>
+        End Time 
+        <input type="datetime-local" name="endtime" id="endtime" value="{{endtime}}"><br><br>
+        <button type="submit">Update</button>
+    </form>
 
-<br><br>
+    <br><br>
+</section>
+{%endblock%}
 
-<a href="{{url_for("schedule.list_schedules")}}">List</a><br>
-
-
+{%block scripts %}
 <script>
     async function fetcher(starttime, movieId){
         try{
@@ -136,4 +199,4 @@
         getStarttime();
     })
 </script>
-
+{%endblock%}

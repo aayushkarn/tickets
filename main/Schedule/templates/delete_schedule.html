@@ -1,20 +1,80 @@
-<style>
-    img{
-        width:100%%;
-        height:300px; 
-    }
-</style>
+{% extends "admin.html" %}
 
-<h1>Delete Schedule</h1>
+{% block styles %}
+.schedule-delete-container{
+    font-family:Poppins;
+}
+.form-container {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px; 
+    width: 80%; 
+    margin: auto;
+}
 
-<form action={{url_for("schedule.delete_schedule", id=schedule.id)}} method="POST">
+form {
+    width: 100%; 
+}
 
-    <h3>Delete <i>{{schedule.movieref.title}}</i>?</h3>
-    <i>{{schedule.start_time}} to {{schedule.end_time}}</i><br>
-    <i>{{schedule.screenref.name}}</i><br><br>
-    <button type="submit">Delete</button>
-    <a href="{{url_for("schedule.list_schedules")}}">Cancel</a>
-</form>
+form input{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+img{
+    width:100px;
+    height:100px; 
+}
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #e36868;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5em;
+}
+.cancel{
+    width:100%;
+    background-color: black;
+    text-decoration:none;
+    text-align:center;
+}
+.cancel:hover{
+    background-color: white;
+}
+form button:hover {
+    background-color: #944e4e;
+}
+{%endblock%}
 
-<br>
-<br>
+
+{%block subMenu%}
+<li><a href="{{url_for('schedule.create_schedule')}}">Create</a></li>
+{%endblock%}
+
+{%block content%}
+<section class="schedule-delete-container">
+    <h1>Delete Schedule</h1><br><br>
+    <form action={{url_for("schedule.delete_schedule", id=schedule.id)}} method="POST">
+
+        <h3>Delete <i>{{schedule.movieref.title}}</i>?</h3>
+        <img src="{{url_for('static', filename=schedule.movieref.poster_url)}}"><br>
+        <i>{{schedule.start_time}} to {{schedule.end_time}}</i><br>
+        <i>{{schedule.screenref.name}}</i><br><br>
+        <button type="submit">Delete</button>
+        <a href="{{url_for("schedule.list_schedules")}}">Cancel</a>
+    </form>
+
+    <br>
+    <br>
+</section>
+{%endblock%}

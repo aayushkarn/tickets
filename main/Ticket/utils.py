@@ -22,14 +22,15 @@ def getTicketById(id):
 
 def generate_ticket(tagid, userid, paymentid, scheduleid):
     tagid = tagid
-    qrcode = uuid.uuid1().hex
+    _qrcode = uuid.uuid1().hex
     userid = userid
     paymentid = paymentid
     scheduleid = scheduleid
-    newTicket = Ticket(tagid, qrcode, userid, paymentid, scheduleid)
+    newTicket = Ticket(tagid, _qrcode, userid, paymentid, scheduleid)
     saveToDB(newTicket)
     # gen ticket image
     generate_ticket_image(newTicket.id)
+    print(_qrcode)
     return newTicket.tagid
 
 def generate_ticket_image(id):
@@ -118,6 +119,9 @@ def getTicketByTagId(tagid):
 
 def getTicketByUser(userid):
     return Ticket.query.join(Ticket.scheduleref).join(Ticket.paymentref).filter(Ticket.userid==userid).order_by(Ticket.created_at).all()
+
+def getBundledTicketByUser(userid):
+    return Ticket.query.join(Ticket.scheduleref).join(Ticket.paymentref).filter(Ticket.userid==userid).group_by(Ticket.scheduleid, Ticket.tagid).order_by(Ticket.created_at).all()
 
 def getTicketImagePath():
     path = Config.STATIC_FOLDER_PATH+Config.TICKET_UPLOAD_PATH

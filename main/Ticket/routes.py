@@ -3,7 +3,7 @@ from flask import Blueprint, redirect, render_template, request, send_file, sess
 from main.Authentication.utils import getUserByUsername, login_required
 from main.Ticket.utils import *
 
-ticket = Blueprint("ticket", __name__, template_folder="templates")
+ticket = Blueprint("ticket", __name__, template_folder="templates", static_folder="static", static_url_path='/Ticket/static')
 
 # TODO: probably restrict later for unauthorized access
 @ticket.route("/<tagid>", methods=['GET', 'POST'])
@@ -29,6 +29,6 @@ def index(tagid):
 @login_required
 def mytickets():
     userid = getUserByUsername(session['user']).id
-    tickets = getTicketByUser(userid)
+    tickets = getBundledTicketByUser(userid)
     
     return render_template("user_tickets.html",tickets=tickets)

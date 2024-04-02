@@ -1,0 +1,416 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --primary:#F7F7F7;
+    --secondary:#323232;
+}
+
+header{
+    /* background-color: var(--primary);
+    color:var(--secondary); */
+    background-color: rgba(0,0,0,0.8);
+    position: fixed;
+    z-index:999;
+    width:100%;
+    backdrop-filter: blur(10px); 
+}
+
+header .navbar-mobile-parent{
+    display: none;
+}
+
+header .navbar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin:0 70px;
+    padding:10px 0;
+}
+
+header .navbar-brand{
+    text-decoration: none;
+    font-size:25px;
+    font-weight: 600;
+    color:white;
+    font-family: Poppins;
+}
+
+header .nav-items{
+    display: flex;
+    font-size: 15px;
+    font-family: Arial;
+    font-weight: 700;
+}
+
+header .nav-items li{
+    list-style: none;
+    margin-left:2rem;
+    padding:9px 8px;
+}
+
+header .nav-items li:hover:not(:last-child){
+    /* background-color: beige; */
+    text-decoration: underline 2px #387462;
+}
+
+header .nav-items li a{
+    text-decoration: none;
+    color:#d1d5e1;
+}
+
+header .login-btn{
+    border:1px solid #848488;
+    padding:9px 18px;
+}
+header .login-btn:hover{
+    background-color: white;
+    color:#000;
+}
+
+.content .carousel {
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0) 100%);
+    position: relative;
+    height: 100vh;
+}
+
+.slide {
+    display: none;
+}
+
+.slide:first-child {
+    display: block;
+}
+
+.content .carousel .carousel-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index:-999;
+}
+
+.content .info{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin:0 70px;
+    color:white;
+    font-family: Poppins;
+    font-size:2rem;
+}
+
+.content .info h1{
+    margin-top: 30px;
+    text-transform: uppercase;
+}
+
+
+.content .info .trailer-btn{
+    margin-top:20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color:white;
+    font-size: 1.5rem;
+    background-color: #387462;
+    padding:10px 25px;
+    border-radius: 1px;
+    font-family: Oswald;
+}
+
+.content .info .trailer-btn:hover{
+    color:#000;
+    background-color: white;
+    /* transition: 0.2s ease-in-out; */
+} 
+
+.movies-container{
+    padding:20px 70px;
+    background-image: linear-gradient(to right, rgba(255,255,255, 0.95) 0 100%), url('https://static.vecteezy.com/system/resources/previews/007/736/242/original/movie-theater-set-of-elements-hand-drawn-with-a-line-for-festivals-and-holidays-illustration-in-the-style-of-a-doodle-isolated-on-a-gray-background-vector.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.movies-container .movie-head-brand{
+    font-size: 1.8rem;
+    font-family: Poppins;
+    font-weight: 600;
+    margin-bottom:20px;
+    text-transform: uppercase;
+}
+
+.movies-container .movies{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap:30px;
+}
+.movies-container a{
+    color:black;
+    text-decoration: none;
+}
+.movies-container .movie{
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+}
+
+.movies-container .movie:hover{
+    transform: scale(1.05);
+    filter: grayscale(0.5);
+}
+
+.movies .movie img{
+    /* height:100%; */
+    height: 300px;
+    width: 200px;
+}
+
+.movies h3{
+    margin: 6px 0;
+    font-family: Poppins;
+    font-weight: 400;
+}
+
+.movies .movie-detail span{
+    color:#464444;
+    font-family: Arial;
+    font-size:13px;
+}
+.movies-container .no-upcoming-movie{
+    font-family: Arial;
+    font-size: 1.2rem;;
+    text-align: center;
+}
+
+
+.upcoming-container{
+    padding:20px 70px;
+    background-color: rgba(0,0,0,0.9);
+    color:white;
+}
+.upcoming-container .movie-head-brand{
+    font-size: 1.8rem;
+    font-family: Poppins;
+    font-weight: 600;
+    margin-bottom:20px;
+    text-transform: uppercase;
+}
+.upcoming-container .movies{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap:30px;
+}
+.upcoming-container .movie{
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+}
+
+.upcoming-container .movie:hover{
+    transform: scale(1.05);
+    filter: grayscale(0.5);
+}
+
+.upcoming-container .movie img{
+    height:300px;
+    width: 200px;
+}
+
+.upcoming-container h3{
+    margin: 6px 0;
+    font-family: Poppins;
+    font-weight: 400;
+}
+
+.upcoming-container .movie-detail span{
+    color:#f5eaea;
+    font-family: Arial;
+    font-size:13px;
+}
+
+.upcoming-container .no-upcoming-movie{
+    font-family: Arial;
+    font-size: 1.2rem;;
+    text-align: center;
+}
+
+footer{
+    width:100%;
+    background-color: #000;
+}
+
+footer .footer{
+    color:white;
+    font-family: Arial;
+    font-size:15px;
+    text-align: center;
+    padding:7px 0;
+    text-transform: uppercase;
+}
+
+footer .footer span{
+    font-weight: 600;
+    color:white;
+    font-family: Poppins;
+    text-transform: lowercase;
+}
+
+/*for error*/
+.error{
+  display: block;
+  margin: 0 20px 20px 20px;
+  background-color: rgba(21, 21, 21, 0.3);
+  font-size:15px;
+  font-family: poppins;
+  padding:5px;
+  border-radius: 5px;
+}
+.error span{
+  padding: 0 10px;
+  overflow: hidden; 
+}
+.error .x{
+  float: right;
+  padding: 0 7px; 
+  cursor: pointer;
+}
+
+
+
+
+
+
+@media screen and (max-width: 600px) {
+    header .navbar{display: none;}
+
+    header .navbar-mobile-parent{
+        display: block;
+    }
+    header .navbar-mobile-parent .collapse-navbar {
+        display: none; 
+    }
+
+    header .navbar-mobile-parent .collapse-navbar.show{
+        display: flex;
+    }
+    
+    header .navbar-mobile{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin:0 50px;
+        padding:5px 0;
+    }
+
+    header .navbar-mobile .nav-toggle{
+        color:white;
+        font-size: 20px;
+        /* border: 1px solid white; */
+        padding:3px 5px;
+    }
+    
+    header .navbar-mobile-parent .collapse-navbar .nav-items{
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    header .navbar-mobile-parent .collapse-navbar .nav-items li{
+        font-size:17px;
+        margin: 10px 0;
+    } 
+
+    .content .info{
+        align-items: center;
+        font-size:1.7rem;
+    }
+    
+    .content .info h1{
+        margin-top: 100px !important;
+    }
+    
+    .content .info .trailer-btn{
+        font-size: 1.3rem;
+        background-color: #387462;
+        padding:10px 25px;
+    }
+
+    .movies-container .movie-head-brand{
+        text-align: center;
+    }
+
+    .movies-container .movies{
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    .movies .movie img{
+        height:100%;
+        width: 230px;
+    }
+
+    .upcoming-container .movie-head-brand{
+        text-align: center;
+    }
+
+    .upcoming-container .movies{
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+@media screen and (max-width: 400px) {  
+    header .navbar-mobile{
+        margin:0 30px;
+    }
+
+    header .navbar-mobile-parent .collapse-navbar .nav-items li{
+        font-size:16px;
+        margin: 7px 0;
+    } 
+
+    .content .info{
+        align-items: center;
+        font-size:clamp(0.7rem, 1.4rem, 1.7rem);
+    }
+    
+    .content .info h1{
+        margin-top: 25px;
+    }
+    
+    .content .info .trailer-btn{
+        font-size: 1.3rem;
+        background-color: #387462;
+        padding:10px 25px;
+    }
+}

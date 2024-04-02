@@ -7,11 +7,11 @@ from .models import SeatType, Seats
 from ..Screen.utils import isInputEmpty, isArrEmpty, isNone
 
 def easyCheckIfInputEmpty(**value):
-    # result = []
+    result = []
     for val in value.items():
         out = checkIfInputEmpty(val)
-    #     result.append(out)
-    # return all(result)
+        result.append(out)
+    return all(result)
 
 def checkIfInputEmpty(*value):
     for key,val in value:

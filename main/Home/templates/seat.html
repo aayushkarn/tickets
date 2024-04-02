@@ -1,108 +1,53 @@
 {% extends 'base.html' %}
 
-{% block styles %}
-.seatTable{
-    background:rgba(256,256,256,0.8);
-    width:100%;
-    height:auto;
-}
-.seatTable tr{
-    display:flex;
-    justify-content:center;
-}
-.screen{
-    width: 40%;
-    height:25px;
-    background-color: grey;
-    text-align: center;
-    margin-bottom: 40px;
-}
-.seat {
-    width: 45px;
-    height: 45px;
-    border: 1px;
-    border-radius: 5px;
-    display: inline-block;
-    text-align: center;
-    margin: 5px;
-    background-color: grey;
-    cursor:pointer;
-}
-.seat.GAP {
-    visibility: hidden;
-}
-.seat.RESERVED{
-    background-color:red;
-}
-.seat.BOOKED, .seat.HOLD{
-    background-color: yellow;
-}
-.seat.selected{
-    background-color: green;
-}
-
-.bottomTr{
-    margin:20px 20px;
-    display: flex;
-}
-.paymentButton{
-    flex:1;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.bottomTr button{
-    background-color: rgb(72, 72, 239);
-    font-size: large;
-    font-weight: 500;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-.bottomTr button:hover{
-    background-color: blue;
-}
-.bottomTr .price{
-    flex:1;
-    display: flex;
-    align-items: center;
-    background-color: rgba(0,0,0,0.2);
-}
-.bottomTr .price h3{
-    margin-left:20px;
-}
-
+{% block head %}
+<link rel="stylesheet" href="{{url_for('home.static', filename='css/seat.css')}}">
 {% endblock %}
 
 {% block content %}
-    <table class="seatTable">
-        <caption><span>Movie: {{movie.title}} | Screen: {{movie.screen}} | Date: {{movie.date}} | Time: {{movie.time}} | Duration: {{movie.duration}} min</span></caption>
-        <tr><td class="screen">Screen<td></tr>
-        {% for row in range(highestRow) %}
-            <tr>
-                {% for col in range(highestColumn) %}
-                    <td>
-                        {% for seat in seats %}
-                            {% if seat.row == row + 1 and seat.column == col + 1 %}
-                                <div id="seat" data-seattype="{{seat.type}}" data-seatid="{{seat.id}}" data-status="{{seat.status}}" class="seat {{seat.type}} {{seat.status}}">{{ seat.id }}</div>
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-        <tr class="bottomTr">
-            <td class="price">
-                <h3>Price: <span id="totalprice">0</span></h3>
-            </td>
-            <td class="paymentButton">
-                <button id="payment">Proceed to payment</button>
-            </td>
-        </tr>
-    </table>
+
+<section class="seats-section">
+    <div class="movie-detail">
+        <p class="heading">{{movie.title}}</p>
+        <div class="sub-heading">
+            <span class="movie-info">{{movie.screen}} | {{movie.date}} | {{movie.time}} | {{movie.duration}} min</span>
+            <div class="seat-color-code">
+                <span class="unreserved">Unreserved</span>
+                <span class="reserved">Reserved</span>
+                <span class="booked">Booked</span>
+                <span class="selected">Selected</span>
+            </div>
+        </div>
+    </div>
+    <div class="seats-container">
+        <div class="seats">
+            <table>
+                <caption>
+                    <img src="{{url_for('static', filename="img/screen.png")}}" class="screen">
+                </caption>
+                <tbody>
+                    {% for row in range(highestRow) %}
+                        <tr>
+                            {% for col in range(highestColumn) %}
+                                <td>
+                                    {% for seat in seats %}
+                                        {% if seat.row == row + 1 and seat.column == col + 1 %}
+                                            <div id="seat" data-seattype="{{seat.type}}" data-seatid="{{seat.id}}" data-status="{{seat.status}}" class="seat {{seat.type}} {{seat.status}}">{{ seat.id }}</div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="price-container">
+            <p class="price">Price: <br>Rs. <span id="totalprice">0</span></p>
+            <a clas="payment-btn" id="payment">Pay</a>
+        </div>
+    </div>
+</section>
 
     <script>
         async function fetcher(scheduleid, seats, price){
@@ -131,8 +76,15 @@
             response.then(function(result){
                 console.log(result)
                 if(result && !result.success){
-                    alert(result.msg);
-                    location.reload();
+                    //alert(result.msg);
+                    Swal.fire({
+                        title: 'Problem!',
+                        text: ''+result.msg+'',
+                        icon: 'info',
+                        confirmButtonText: 'OK'
+                       }).then(() => {
+                            location.reload();
+                       });
                 } else {
                     window.location.href = "{{url_for('payment.home')}}";
                 }
@@ -159,10 +111,22 @@
                                 } else if(seatType=="EXCLUSIVE"){
                                     price += {{seatPrice[0].EXCLUSIVE | float}}
                                 } else{
-                                    alert("Invalid price value");
+                                    Swal.fire({
+                                        title: "Invalid price value",
+                                        width: 600,
+                                        padding: "3em",
+                                        color: "#fff",
+                                        background: `rgba(0,0,0,0.5) url('{{url_for('static', filename='img/vivek.jpg')}}') no-repeat center center / contain`
+                                    });
                                 }
                             } else {
-                                alert("cannot select more than this")
+                                Swal.fire({
+                                    title: "Cannot select more than this",
+                                    width: 600,
+                                    padding: "3em",
+                                    color: "#fff",
+                                    background: `rgba(0,0,0,0.5) url('{{url_for('static', filename='img/vivek.jpg')}}') no-repeat center center / contain`
+                                });
                             }
                         } else{
                             selectedSeat.splice(selectedSeat.indexOf(seatid), 1);
@@ -174,7 +138,13 @@
                             } else if(seatType=="EXCLUSIVE"){
                                 price -= {{seatPrice[0].EXCLUSIVE | float}}
                             } else{
-                                alert("Invalid price value");
+                                Swal.fire({
+                                    title: "Invalid price value",
+                                    width: 600,
+                                    padding: "3em",
+                                    color: "#fff",
+                                    background: `rgba(0,0,0,0.5) url('{{url_for('static', filename='img/vivek.jpg')}}') no-repeat center center / contain`
+                                });
                             }
                         }
                     }
